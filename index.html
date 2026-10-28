@@ -2,6 +2,7 @@
 <html lang="nb">
 <head>
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Berlin 2026 – helgeguide</title>
 <script src="./vendor/react.js"></script>
 <script src="./vendor/react-dom.js"></script>
@@ -34,7 +35,7 @@ a{color:#1E5866}a:hover{color:#123E48}
 .btn{font:inherit;cursor:pointer;border:0}
 .btn:focus-visible,.lnk:focus-visible{outline:2px solid #1E5866;outline-offset:2px}
 .blob{position:absolute;border-radius:50%;pointer-events:none}
-.credit:empty{display:none}
+.navwrap{position:relative}
 @keyframes rise{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
 @keyframes fade{from{opacity:0}to{opacity:1}}
 @keyframes kb{from{transform:scale(1)}to{transform:scale(1.1)}}
@@ -62,13 +63,20 @@ a{color:#1E5866}a:hover{color:#123E48}
 .stopgrid,.daygrid,.ov{grid-template-columns:1fr;height:auto;gap:20px}
 .photo{height:40vh;min-height:240px}
 .textcol{padding:22px 16px 8px 16px}
-.mapcard{position:relative;right:auto;bottom:auto;width:auto;max-width:none;margin:8px 16px 96px 16px}
+.mapcard{position:relative;right:auto;bottom:auto;width:auto;max-width:none;margin:8px 16px 24px 16px}
 .frame4{grid-template-columns:1fr}
 .selfie6{grid-template-columns:1fr}
 .dex5{grid-template-columns:1fr 1fr}
 .side4{grid-template-columns:1fr}
 .hide-m{display:none !important}
-.navwrap{position:fixed;left:0;right:0;bottom:0;z-index:20}
+.navwrap{position:fixed;left:0;right:0;bottom:0;z-index:20;box-shadow:0 -6px 18px -12px rgba(31,42,55,.35)}
+.topbar{height:auto !important;flex-wrap:wrap;row-gap:0 !important;padding:6px 16px 0 16px !important;position:sticky !important;top:0;z-index:30 !important}
+.chapnav{order:3;width:100%;flex-wrap:nowrap !important;overflow-x:auto;padding:2px 0 8px 0;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.chapnav::-webkit-scrollbar{display:none}
+.chapnav button{flex:none}
+.stage{padding-bottom:64px}
+.daygrid>.pad-m:first-child{padding-bottom:4px !important}
+.daygrid>.pad-m:last-child{padding-top:4px !important}
 .pad-m{padding:24px 16px 110px 16px !important}
 .big-m{font-size:84px !important}
 .h-m{font-size:40px !important}
@@ -78,12 +86,12 @@ a{color:#1E5866}a:hover{color:#123E48}
 <div class="root" tabIndex="0" ref="{{ setRoot }}" onKeyDown="{{ onKey }}" onMouseMove="{{ onMove }}" onTouchStart="{{ onTouchStart }}" onTouchEnd="{{ onTouchEnd }}" style="background: #F7F3EE; color: #1F2A37">
 
 <!-- TOP BAR -->
-<header style="height: 56px; flex: none; display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 0 24px; background: #F7F3EE; border-bottom: 1px solid #E6DDD0; position: relative; z-index: 5">
+<header class="topbar" style="height: 56px; flex: none; display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 0 24px; background: #F7F3EE; border-bottom: 1px solid #E6DDD0; position: relative; z-index: 5">
 <button class="btn" onClick="{{ goHome }}" style="background: transparent; color: #1E5866; display: flex; align-items: baseline; gap: 8px; padding: 6px 0; min-height: 44px" aria-label="Til forsiden">
 <span style="font-family: 'Instrument Serif', Georgia, serif; font-size: 26px">Berlin</span>
 <span style="font-size: 12px; font-weight: 700; letter-spacing: .18em; color: #B5523F">2026</span>
 </button>
-<nav class="hide-m" aria-label="Kapitler" style="display: flex; gap: 4px; flex-wrap: wrap">
+<nav class="chapnav" aria-label="Kapitler" style="display: flex; gap: 4px; flex-wrap: wrap">
 <sc-for list="{{ chapters }}" as="c" hint-placeholder-count="8">
 <button class="btn" onClick="{{ c.go }}" style="min-height: 34px; padding: 6px 12px; border-radius: 999px; font-size: 13px; font-weight: 600; background: {{ c.bg }}; color: {{ c.fg }}; transition: background .3s">{{ c.label }}</button>
 </sc-for>
@@ -237,7 +245,7 @@ a{color:#1E5866}a:hover{color:#123E48}
 <div class="photo" style="background: {{ s.tint }}">
 <sc-if value="{{ s.hasPhoto }}" hint-placeholder-val="{{ false }}">
 <div style="position: absolute; inset: -24px; transform: {{ par }}; transition: transform .7s ease-out"><img class="kb" src="{{ s.photo }}" alt="{{ s.title }}" style="width: 100%; height: 100%; object-fit: cover; display: block"></div>
-<div class="credit" style="position: absolute; right: 12px; top: 10px; font-size: 11px; color: #FFFFFF; background: rgba(31,42,55,.55); padding: 3px 8px; border-radius: 6px">{{ s.credit }}</div>
+<sc-if value="{{ s.hasCredit }}" hint-placeholder-val="{{ false }}"><div class="credit" style="position: absolute; right: 12px; top: 10px; font-size: 11px; color: #FFFFFF; background: rgba(31,42,55,.55); padding: 3px 8px; border-radius: 6px">{{ s.credit }}</div></sc-if>
 </sc-if>
 <sc-if value="{{ s.noPhoto }}" hint-placeholder-val="{{ true }}">
 <div class="fd" style="position: absolute; inset: -24px; transform: {{ par }}; transition: transform .7s ease-out; background-image: radial-gradient(rgba(31,42,55,.10) 1px, transparent 1.3px); background-size: 18px 18px"></div>
@@ -287,7 +295,7 @@ a{color:#1E5866}a:hover{color:#123E48}
 <div class="photo" style="background: {{ s.tint }}">
 <sc-if value="{{ s.hasPhoto }}" hint-placeholder-val="{{ false }}">
 <div style="position: absolute; inset: -24px; transform: {{ par }}; transition: transform .7s ease-out"><img class="kb" src="{{ s.photo }}" alt="{{ s.title }}" style="width: 100%; height: 100%; object-fit: cover; display: block"></div>
-<div class="credit" style="position: absolute; right: 12px; top: 10px; font-size: 11px; color: #FFFFFF; background: rgba(31,42,55,.55); padding: 3px 8px; border-radius: 6px">{{ s.credit }}</div>
+<sc-if value="{{ s.hasCredit }}" hint-placeholder-val="{{ false }}"><div class="credit" style="position: absolute; right: 12px; top: 10px; font-size: 11px; color: #FFFFFF; background: rgba(31,42,55,.55); padding: 3px 8px; border-radius: 6px">{{ s.credit }}</div></sc-if>
 </sc-if>
 <sc-if value="{{ s.noPhoto }}" hint-placeholder-val="{{ true }}">
 <div class="fd" style="position: absolute; inset: -24px; transform: {{ par }}; transition: transform .7s ease-out; background-image: radial-gradient(rgba(31,42,55,.10) 1px, transparent 1.3px); background-size: 18px 18px"></div>
@@ -401,9 +409,9 @@ a{color:#1E5866}a:hover{color:#123E48}
 <span style="position: absolute; right: 8px; top: 8px; font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 999px; background: rgba(31,42,55,.78); color: #FFFFFF; font-variant-numeric: tabular-nums">{{ d.no }}</span>
 </div>
 <div style="padding: 10px 12px 12px 12px; display: flex; flex-direction: column; gap: 6px; flex: 1">
-<div style="display: flex; justify-content: space-between; align-items: baseline; gap: 6px">
+<div style="display: flex; justify-content: space-between; align-items: baseline; gap: 2px 6px; flex-wrap: wrap">
 <span style="font-size: 16px; font-weight: 700; color: #1F2A37">{{ d.name }}</span>
-<span style="font-size: 11px; color: #7A5A0E; white-space: nowrap">{{ d.rarity }}</span>
+<span style="font-size: 11px; color: #7A5A0E">{{ d.rarity }}</span>
 </div>
 <div style="font-size: 12px; line-height: 1.35; color: #3A4656">📍 {{ d.habitat }}</div>
 <div style="font-size: 12px; line-height: 1.4; color: #1F2A37"><strong>⚡ {{ d.ability }}</strong> {{ d.abilityText }}</div>
@@ -506,7 +514,7 @@ a{color:#1E5866}a:hover{color:#123E48}
 </main>
 
 <!-- BOTTOM NAV -->
-<div class="navwrap" style="flex: none; background: #F7F3EE; border-top: 1px solid #E6DDD0; position: relative; z-index: 6">
+<div class="navwrap" style="flex: none; background: #F7F3EE; border-top: 1px solid #E6DDD0; z-index: 6">
 <div style="position: absolute; left: 0; top: -1px; height: 3px; width: {{ progress }}; background: #6A9FA8; transition: width .6s cubic-bezier(.2,.7,.2,1)"></div>
 <div style="height: 56px; padding: 0 16px 0 24px; display: flex; align-items: center; justify-content: space-between; gap: 12px">
 <div style="font-size: 13px; font-weight: 600; color: #3A4656; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0">{{ footLabel }}</div>
@@ -543,69 +551,74 @@ var DAYS = [
         q: 'The Social Hub Berlin Alexanderplatz, Alexanderstraße 40, 10179 Berlin', origin: 'Flughafen BER, Schönefeld', mode: 'transit',
         text: 'Vi lander kl. 20:00. Ta S9 fra flyplassen til Jannowitzbrücke (går hvert 20. minutt) og gå videre til hotellet på Alexanderstraße 40.',
         tip: 'Kjøp billett i BVG-appen. Den koster 5 euro, så last ned appen før avreise.', how: 'S9 til Jannowitzbrücke, så kort gange.' },
-      { cat: 'fri', emoji: '🍺', title: 'Späti-opplevelsen', de: 'Spätkauf', time: 'Kveld', dur: 'valgfritt',
+      { cat: 'fri', emoji: '🍺', title: 'Späti-opplevelsen', photo: './assets/87e60a85978e92a2d2000ded3bb79b08.jpg', de: 'Spätkauf', time: 'Kveld', dur: 'valgfritt',
         q: 'Späti near Alexanderstraße 40, Berlin', origin: HOTEL, mode: 'walking',
         text: 'Spätkauf, eller «Späti», er Berlins nattåpne kiosk og nabolagets uoffisielle møteplass. Kjøp en kald Berliner Pilsner eller Club-Mate og nyt den ute.',
         tip: 'Ta med flasken tilbake til kiosken. Det er pant (Pfand) på den.', how: 'Det finnes Spätis i gatene rundt hotellet.' }
     ] },
   { key: 'fre', label: 'Fredag', date: '6. november', when: 'FREDAG 6. NOVEMBER', icon: '🎮', bg: '#F8E7E1',
     title: 'Gameshow, lunsj og Murens kunst', sub: 'WhatAGame + felleslunsj → East Side Gallery og Kreuzberg',
-    lede: 'Formiddagen er felles. Etter lunsj ligger East Side Gallery, Oberbaumbrücke og Kreuzberg noen få minutter unna.',
+    lede: 'Formiddagen er felles. Etter lunsj ligger East Side Gallery, Oberbaumbrücke og Kreuzberg noen få minutter unna, og dagen kan avsluttes i Markthalle Neun.',
     stops: [
-      { cat: 'oblig', emoji: '🎮', title: 'WhatAGame', de: 'Revaler Straße 100', time: '10:30', dur: 'ca. 2,5 t',
+      { cat: 'oblig', emoji: '🎮', title: 'WhatAGame', photo: './assets/a6e1ff88c843233569e09fe2a067bb7b.jpg', de: 'Revaler Straße 100', time: '10:30', dur: 'ca. 2,5 t',
         q: 'Revaler Straße 100, 10243 Berlin', origin: HOTEL, mode: 'walking',
         text: 'Et privat gameshow der lagene konkurrerer i kunnskap, taktikk, fysisk behendighet og morsomme utfordringer. Det ligger i Friedrichshain, nær RAW-Gelände, et tidligere jernbaneområde kjent for graffiti og uteliv.',
         tip: 'Showet varer normalt rundt 2,5 timer. Frokost serveres 07:00–10:30, så spis i god tid.', how: 'Ca. 40 min gange fra hotellet.' },
-      { cat: 'oblig', emoji: '🍽️', title: 'Jäger & Lustig', de: 'Grünberger Straße 1', time: '14:00', dur: 'felleslunsj',
+      { cat: 'oblig', emoji: '🍽️', title: 'Jäger & Lustig', photo: './assets/032efecc88c1426f0982169c53ae4643.jpg', de: 'Grünberger Straße 1', time: '14:00', dur: 'felleslunsj',
         lat: 52.51339, lon: 13.44806, q: 'Jäger & Lustig, Grünberger Straße 1, 10243 Berlin', origin: 'Revaler Straße 100, 10243 Berlin', mode: 'walking', short: 'Jäger & Lustig',
         text: 'Et tradisjonelt tysk vertshus med regional husmannskost og sesongretter som vilt og gås. Restauranten står i Michelin-guiden og serverer ordentlig tysk mat, ikke turistmat.',
         tip: 'Bestill gjerne noe du ikke ville valgt hjemme. Det er dagen for det.', how: 'Ca. 9 min gange fra WhatAGame.' },
-      { cat: 'sight', emoji: '🎨', title: 'East Side Gallery', photo: './assets/174ed58fd46a30015016838fbecdb40e.png', de: 'Mühlenstraße', time: '15:45', dur: '45 min',
+      { cat: 'sight', emoji: '🎨', title: 'East Side Gallery', photo: './assets/85f4610bf11b4f818481eb8205ab9b95.jpg', de: 'Mühlenstraße', time: '15:45', dur: '45 min',
         lat: 52.50529, lon: 13.44131, q: 'East Side Gallery, Berlin', mode: 'walking', short: 'East Side Gallery', selfie: 4,
         text: 'En 1,3 km lang bevart del av Berlinmuren, malt som utendørs kunstgalleri etter murens fall. Her finner du det verdensberømte kysset mellom Bresjnev og Honecker, og Trabanten som bryter gjennom muren.',
         tip: 'Gå østover mot Oberbaumbrücke, da ender du rett ved broen.', how: 'Ca. 15 min gange fra lunsjen.' },
-      { cat: 'sight', emoji: '🌉', title: 'Oberbaumbrücke', photo: './assets/a46964a407c69fd1f5526d976a971f44.png', de: 'Oberbaumbrücke', time: '16:30', dur: '20 min',
+      { cat: 'sight', emoji: '🌉', title: 'Oberbaumbrücke', photo: './assets/e02135063479499578a2f1a36f5bdffe.jpg', de: 'Oberbaumbrücke', time: '16:30', dur: '20 min',
         lat: 52.50194, lon: 13.44583, q: 'Oberbaumbrücke, Berlin', mode: 'walking', short: 'Oberbaumbrücke', selfie: 5,
         text: 'En av Berlins vakreste broer, med karakteristiske røde teglsteinstårn. Den var grenseovergang mellom Øst- og Vest-Berlin, og symboliserer i dag gjenforeningen.',
         tip: 'Vent på at den gule U-banen ruller over broen.',
         extraEmoji: '🌭', extraLabel: 'Currywurst:', extra: 'Curry 36 ligger i stasjonsbygget på Warschauer Straße, rett ved broen.', how: 'Ca. 5 min gange.' },
-      { cat: 'fri', emoji: '🍔', title: 'Kreuzberg og Burgermeister', de: 'Schlesisches Tor', time: '17:00', dur: 'frilek',
+      { cat: 'fri', emoji: '🍔', title: 'Kreuzberg og Burgermeister', photo: './assets/0c5ca730b61e460ccf39e3dac2c4b461.jpg', de: 'Schlesisches Tor', time: '17:00', dur: 'frilek',
         lat: 52.50123, lon: 13.44166, q: 'Burgermeister Schlesisches Tor, Oberbaumstraße 8, Berlin', mode: 'walking', short: 'Schlesisches Tor',
         text: 'En berømt burgerkiosk i et ombygd offentlig toalett under U-banesporene. Veldig Berlin. Herfra kan du utforske Wrangelkiez og resten av Kreuzberg.',
-        tip: 'Rett etter felleslunsj holder det kanskje å gå forbi og se på stedet, med mindre appetitten er tilbake. Resten av kvelden er frilek.', how: 'Over broen, ca. 5 min gange.' }
+        tip: 'Rett etter felleslunsj holder det kanskje å gå forbi og se på stedet, med mindre appetitten er tilbake.', how: 'Over broen, ca. 5 min gange.' },
+      { cat: 'fri', emoji: '🍺', title: 'Markthalle Neun', photo: './assets/9d1a66107ce70de75cb851a860f7a0ce.jpg', de: 'Eisenbahnstraße 42', time: '17:45', dur: 'frilek',
+        lat: 52.50220, lon: 13.43150, q: 'Markthalle Neun, Eisenbahnstraße 42, 10997 Berlin', mode: 'walking', short: 'Markthalle Neun',
+        text: 'En tradisjonell markedshall fra 1891, full av boder med både lokal, tradisjonell og moderne mat. Her får du også øl.',
+        tip: 'Åpent fredag og lørdag 08–20. Så kort tid etter felleslunsjen passer en øl og noe søtt kanskje bedre enn et nytt måltid. Resten av kvelden er frilek.',
+        extraEmoji: '📅', extraLabel: 'Eller lørdag:', extra: 'Hallen er også åpen lørdag, for eksempel før eller etter KaDeWe.', how: 'Ca. 10 min gange fra Schlesisches Tor.' }
     ] },
   { key: 'lor', label: 'Lørdag', date: '7. november', when: 'LØRDAG 7. NOVEMBER · 09:00–14:00 + ETTERMIDDAG', icon: '🏛️', bg: '#E3EDF6',
     title: 'De store severdighetene og KaDeWe', sub: 'KaDeWe + de store severdighetene → fellesmiddag kl. 19',
     lede: 'Klassikerne i Mitte til fots fra kl. 09, KaDeWe på ettermiddagen (stengt søndag) og indisk fellesmiddag kl. 19.',
     stops: [
-      { cat: 'sight', emoji: '🏛️', title: 'Reichstag', de: 'Reichstagsgebäude', time: '09:15', dur: '60 min',
+      { cat: 'sight', emoji: '🏛️', title: 'Reichstag', photo: './assets/2bf493e9946a87abc12dbe0296b0150a.jpg', de: 'Reichstagsgebäude', time: '09:15', dur: '60 min',
         lat: 52.51861, lon: 13.37611, q: 'Reichstagsgebäude, Berlin', origin: HOTEL, mode: 'transit', short: 'Reichstag', selfie: 2,
         text: 'Den tyske nasjonalforsamlingens bygning fra 1894. Den er kjent for riksdagsbrannen i 1933, krigens slutt i 1945 og den moderne glasskuppelen som symboliserer åpenhet i demokratiet.',
         photoTip: 'Fra den store plassen Platz der Republik.',
         tip: 'Kuppelen er gratis, men krever forhåndsregistrering på bundestag.de. Ta med gyldig ID.', how: 'U5 Alexanderplatz → Bundestag, ca. 15 min.' },
-      { cat: 'sight', emoji: '🏛️', title: 'Brandenburger Tor', de: 'Pariser Platz', time: '10:25', dur: '15 min',
+      { cat: 'sight', emoji: '🏛️', title: 'Brandenburger Tor', photo: './assets/a889bb031f9833cf09bf59d7b120eb28.jpg', de: 'Pariser Platz', time: '10:25', dur: '15 min',
         lat: 52.51628, lon: 13.37770, q: 'Brandenburger Tor, Berlin', mode: 'walking', short: 'Brandenburger Tor', selfie: 1,
         text: 'Berlins mest ikoniske monument, bygget i 1791. Porten lå ved grensen mellom øst og vest under den kalde krigen og ble et verdenssymbol på frihet og gjenforening i 1989.',
         photoTip: 'Stå på Pariser Platz og få med alle søylene og quadrigaen på toppen.',
         tip: 'Tidlig på dagen er det færre turister i bildet.', how: 'Ca. 5 min gange.' },
-      { cat: 'sight', emoji: '🕯️', title: 'Holocaust-minnesmerket', de: 'Denkmal für die ermordeten Juden Europas', time: '10:45', dur: '25 min',
+      { cat: 'sight', emoji: '🕯️', title: 'Holocaust-minnesmerket', photo: './assets/603cc05dc1e29ec5c82ac6be07e503db.jpg', de: 'Denkmal für die ermordeten Juden Europas', time: '10:45', dur: '25 min',
         lat: 52.51389, lon: 13.37889, q: 'Denkmal für die ermordeten Juden Europas, Berlin', mode: 'walking', short: 'Minnesmerket',
         text: 'Over 2 700 betongblokker til minne om Europas seks millioner myrdede jøder. Blokkene varierer i høyde og gir en sterk følelse av desorientering når du går mellom dem.',
         tip: 'Dette er et sted for ettertanke. Ikke klatre eller hopp på blokkene.', how: 'Ca. 5 min gange.' },
-      { cat: 'sight', emoji: '🏙️', title: 'Potsdamer Platz', de: 'Potsdamer Platz', time: '11:20', dur: '20 min',
+      { cat: 'sight', emoji: '🏙️', title: 'Potsdamer Platz', photo: './assets/4bafab3ab459e3ed9e4f69c2e2222fe5.jpg', de: 'Potsdamer Platz', time: '11:20', dur: '20 min',
         lat: 52.50944, lon: 13.37611, q: 'Potsdamer Platz, Berlin', mode: 'walking', short: 'Potsdamer Platz',
         text: 'Før andre verdenskrig var dette et av Europas travleste bykryss. Under delingen ble det nærmest en ødemark ved Muren, og i dag er det moderne arkitektur og et symbol på gjenoppbyggingen.',
         tip: 'Se etter Mur-segmentene ved stasjonsinngangen.', how: 'Ca. 10 min gange langs Ebertstraße.' },
-      { cat: 'sight', emoji: '🧱', title: 'Topographie des Terrors', de: 'Niederkirchnerstraße 8', time: '11:45', dur: '40 min',
+      { cat: 'sight', emoji: '🧱', title: 'Topographie des Terrors', photo: './assets/eb5942c7f368eb3cb96eb36382198a76.jpg', de: 'Niederkirchnerstraße 8', time: '11:45', dur: '40 min',
         lat: 52.50670, lon: 13.38370, q: 'Topographie des Terrors, Berlin', mode: 'walking', short: 'Topographie',
         text: 'Her hadde Gestapo, SS og deler av nazistenes terrorapparat sine hovedkvarter. Du ser en bevart del av Berlinmuren og en utendørs utstilling om regimets forbrytelser, uten å gå på museum.',
         tip: 'Utendørsutstillingen langs Muren gir mye på kort tid.', how: 'Ca. 8 min gange.' },
-      { cat: 'sight', emoji: '🪖', title: 'Checkpoint Charlie', de: 'Friedrichstraße', time: '12:30', dur: '15 min',
+      { cat: 'sight', emoji: '🪖', title: 'Checkpoint Charlie', photo: './assets/88520fe4f2c7a9e7433954044e1b0711.jpg', de: 'Friedrichstraße', time: '12:30', dur: '15 min',
         lat: 52.50750, lon: 13.39028, q: 'Checkpoint Charlie, Berlin', mode: 'walking', short: 'Checkpoint Charlie', selfie: 3,
         text: 'Den mest kjente grenseovergangen mellom amerikansk og sovjetisk sektor. Stedet er kjent for stridsvognkonfrontasjonen i 1961, da supermaktene var svært nær en militær konfrontasjon.',
         photoTip: 'Grenseboden og skiltet «You are leaving the American sector».',
         tip: 'De uniformerte «soldatene» tar betalt for bilder. Skiltet er gratis.', how: 'Ca. 8 min gange.' },
-      { cat: 'sight', emoji: '🍫', title: 'Gendarmenmarkt og Rausch', de: 'Gendarmenmarkt', time: '12:55', dur: '35 min',
+      { cat: 'sight', emoji: '🍫', title: 'Gendarmenmarkt og Rausch', photo: './assets/b66abb817787e034b3d8d219029f2c34.jpg', de: 'Gendarmenmarkt', time: '12:55', dur: '35 min',
         lat: 52.51361, lon: 13.39278, q: 'Gendarmenmarkt, Berlin', mode: 'walking', short: 'Gendarmenmarkt',
         text: 'Et av Berlins vakreste torg, omgitt av Konzerthaus og to monumentale kirker. Rett ved ligger Rausch, et stort sjokoladehus med praliner og varm sjokolade.',
         tip: 'Den varme sjokoladen hos Rausch passer godt som pause i november.',
@@ -614,52 +627,57 @@ var DAYS = [
         lat: 52.51639, lon: 13.39389, q: 'Bebelplatz, Berlin', mode: 'walking', short: 'Bebelplatz',
         text: 'Et historisk torg ved Humboldt-universitetet, der nazistene organiserte bokbrenningen 10. mai 1933.',
         tip: 'Se ned gjennom glassplaten i bakken. Under ligger et minnesmerke med tomme bokhyller.', how: 'Ca. 5 min gange.' },
-      { cat: 'sight', emoji: '🌳', title: 'Unter den Linden og Neue Wache', de: 'Unter den Linden 4', time: '13:45', dur: '10 min',
+      { cat: 'sight', emoji: '🌳', title: 'Unter den Linden og Neue Wache', photo: './assets/85363294b669966a8a66335603324715.jpg', de: 'Unter den Linden 4', time: '13:45', dur: '10 min',
         lat: 52.51750, lon: 13.39556, q: 'Neue Wache, Unter den Linden 4, Berlin', mode: 'walking', short: 'Neue Wache',
         text: 'Unter den Linden er Berlins historiske paradegate fra Brandenburger Tor til det gamle kongelige sentrum. Neue Wache er Tysklands sentrale minnesmerke over ofre for krig og tyranni.',
         tip: 'Gå inn og se Käthe Kollwitz-skulpturen under takåpningen. Det er gratis.', how: 'Ca. 3 min gange.' },
-      { cat: 'sight', emoji: '⛪', title: 'Museumsinsel og Berliner Dom', photo: './assets/b126b662cf36bae3bbe006746dde771c.png', de: 'Lustgarten', time: '14:00', dur: 'ruten slutter',
+      { cat: 'sight', emoji: '⛪', title: 'Museumsinsel og Berliner Dom', photo: './assets/a8f9f5a5c479d07a5452f41d840a5064.jpg', de: 'Lustgarten', time: '14:00', dur: 'ruten slutter',
         lat: 52.51880, lon: 13.39900, q: 'Lustgarten, Berlin', mode: 'walking', short: 'Museumsinsel',
         text: 'Museumsinsel er et UNESCO-verdensarvområde med fem store museer. Berliner Dom er en monumental kirke fra keisertiden med imponerende kuppel, og arkitekturen kan nytes uten å gå inn.',
         photoTip: 'Den klassiske vinkelen får du fra Lustgarten, med hele domen bak deg.',
         tip: 'Herfra er det ca. 20 minutter å gå tilbake til hotellet.', how: 'Ca. 5 min gange.' },
-      { cat: 'fri', emoji: '🛍️', title: 'KaDeWe', photo: './assets/716c389345fccb0375eb3ea0ba3dcf21.png', de: 'Kaufhaus des Westens', time: '15:00', dur: 'ettermiddag',
+      { cat: 'fri', emoji: '🛍️', title: 'KaDeWe', photo: './assets/10762dd08aaeb88f7821af7db72a46d0.jpg', de: 'Kaufhaus des Westens', time: '15:00', dur: 'ettermiddag',
         lat: 52.50194, lon: 13.34278, far: true, q: 'KaDeWe, Tauentzienstraße 21-24, Berlin', origin: 'Lustgarten, Berlin', mode: 'transit', short: 'KaDeWe',
         text: 'Kaufhaus des Westens åpnet i 1907 og er Europas nest største varehus og et symbol på Vest-Berlins velstand. Gå rett til den spektakulære delikatesseavdelingen i 6. etasje.',
         tip: 'Åpent lørdag 10–21, stengt søndag. Lørdag er derfor eneste mulighet.', how: 'U2 til Wittenbergplatz, ca. 20–25 min.' },
-      { cat: 'oblig', emoji: '🍛', title: 'Fellesmiddag på Aapka', de: 'Kastanienallee 50', time: '19:00', dur: 'felles',
+      { cat: 'oblig', emoji: '🍛', title: 'Fellesmiddag på Aapka', photo: './assets/89cc165e29259abbfba7ea0a21065f4d.jpg', de: 'Kastanienallee 50', time: '19:00', dur: 'felles',
         lat: 52.53400, lon: 13.40479, far: true, q: 'Aapka, Kastanienallee 50, 10119 Berlin', origin: HOTEL, mode: 'transit', short: 'Aapka',
         text: 'Indisk restaurant i Kastanienallee ved Zionskirchplatz, mellom Mitte og Prenzlauer Berg. Området er kjent for kafeer, restauranter og avslappet byliv i bygårder fra slutten av 1800-tallet.',
         tip: 'Kom litt tidligere og ta en runde i nabolaget før maten.', how: 'Kollektivt eller ca. 30 min gange fra hotellet.' }
     ] },
   { key: 'son', label: 'Søndag', date: '8. november', when: 'SØNDAG 8. NOVEMBER · 09:00 → FLY 20:05', icon: '📷', bg: '#E5F0EF',
     title: 'Muren og historiske Øst-Berlin', sub: 'Berlin Wall Memorial + historiske Øst-Berlin → fly kl. 20:05',
-    lede: 'Muren slik den faktisk var, currywurst ved Hackescher Markt og DDR-Berlin rundt Alexanderplatz. Vi avslutter like ved hotellet, i god tid før flyet.',
+    lede: 'Muren slik den faktisk var, currywurst ved Hackescher Markt og DDR-Berlin rundt Alexanderplatz. De ivrigste rekker årets siste RAW-loppemarked før flyet.',
     stops: [
-      { cat: 'sight', emoji: '🧱', title: 'Berlin Wall Memorial', de: 'Gedenkstätte Berliner Mauer', time: '09:15', dur: '45–60 min',
+      { cat: 'sight', emoji: '🧱', title: 'Berlin Wall Memorial', photo: './assets/cc923c5378d7ae663ec0fff8a147d2d2.jpg', de: 'Gedenkstätte Berliner Mauer', time: '09:15', dur: '45–60 min',
         lat: 52.53500, lon: 13.39000, q: 'Gedenkstätte Berliner Mauer, Bernauer Straße 111, Berlin', origin: HOTEL, mode: 'transit', short: 'Bernauer Str.',
         text: 'Et av de beste stedene for å forstå hvordan muren faktisk fungerte, med bevart mur, vakttårn og dødssone. I denne gaten hoppet folk fra vinduene sine for å flykte til Vest i 1961.',
         photoTip: 'Fotografer grenseanlegget fra utsiktspunktet.',
         tip: 'Gratis inngang. Beregn 45–60 minutter.',
         extraEmoji: '👕', extraLabel: 'Valgfritt:', extra: 'Mauerpark-loppemarkedet åpner kl. 10, ti minutter unna. Her starter jakten på flanellskjorta.', how: 'U8 Alexanderplatz → Bernauer Straße, ca. 10 min.' },
-      { cat: 'sight', emoji: '🌭', title: 'Hackesche Höfe og Curry61', photo: './assets/f17748459080716a1cef2342bcfd4894.png', de: 'Hackescher Markt', time: '10:30', dur: '45 min',
+      { cat: 'sight', emoji: '🌭', title: 'Hackesche Höfe og Curry61', photo: './assets/dd4e9609007b99fd25d75c92a0f081ea.jpg', de: 'Hackescher Markt', time: '10:30', dur: '45 min',
         lat: 52.52417, lon: 13.40222, q: 'Hackesche Höfe, Berlin', mode: 'walking', short: 'Hackesche Höfe', selfie: 6,
         text: 'Et nettverk av restaurerte bakgårder med jugendstilarkitektur, små butikker og kafeer, der du ser et mer hverdagslig og kreativt Berlin.',
         tip: 'Mange butikker er stengt på søndag, men gårdene er like fine.',
         extraEmoji: '🌭', extraLabel: 'Curry61:', extra: 'Like ved på Oranienburger Straße 6, åpent søndag fra kl. 11. Currywurst med pommes er obligatorisk turistmat.', how: 'Tram/S-Bahn eller ca. 25 min gange.' },
-      { cat: 'sight', emoji: '📡', title: 'Alexanderplatz og TV-tårnet', photo: './assets/dafc5571285fa00da1d6667dca6a0e51.png', de: 'Weltzeituhr', time: '11:45', dur: '20 min',
+      { cat: 'sight', emoji: '📡', title: 'Alexanderplatz og TV-tårnet', photo: './assets/0d3f3cdbf95b149b75039e0d4c9d3602.jpg', de: 'Weltzeituhr', time: '11:45', dur: '20 min',
         lat: 52.52117, lon: 13.41331, q: 'Weltzeituhr, Alexanderplatz, Berlin', mode: 'walking', short: 'Alexanderplatz',
         text: 'Alexanderplatz var et sentralt byrom i DDR, og det 368 meter høye TV-tårnet ble fullført i 1969 som et prestisjeprosjekt. Se også Weltzeituhr, verdensklokken som viser tiden i byer over hele verden.',
         photoTip: 'Verdensklokken med TV-tårnet i bakgrunnen.',
         tip: 'Klassisk Berlin-møtested: «Wir treffen uns an der Weltzeituhr».', how: 'Ca. 12 min gange.' },
-      { cat: 'sight', emoji: '🏛️', title: 'Rotes Rathaus', de: 'Berliner Rathaus', time: '12:15', dur: '10 min',
+      { cat: 'sight', emoji: '🏛️', title: 'Rotes Rathaus', photo: './assets/d0165cab75a89bc6310b2b64884a55b7.jpg', de: 'Berliner Rathaus', time: '12:15', dur: '10 min',
         lat: 52.51861, lon: 13.40833, q: 'Rotes Rathaus, Berlin', mode: 'walking', short: 'Rotes Rathaus',
         text: 'Berlins røde rådhus har fått navnet sitt fra de karakteristiske røde mursteinene. Bygningen er sete for byregjeringen og en av byens mest gjenkjennelige offentlige bygninger.',
         tip: 'Neptunbrunnen ligger på plassen rett foran.', how: 'Ca. 5 min gange.' },
-      { cat: 'sight', emoji: '🏘️', title: 'Nikolaiviertel', de: 'Nikolaikirche', time: '12:30', dur: 'ca. 1 t',
+      { cat: 'sight', emoji: '🏘️', title: 'Nikolaiviertel', photo: './assets/abe52d82f2d257b6f4e5f3a5ea6f2944.jpg', de: 'Nikolaikirche', time: '12:30', dur: 'ca. 1 t',
         lat: 52.51694, lon: 13.40722, q: 'Nikolaikirche, Berlin', mode: 'walking', short: 'Nikolaiviertel',
         text: 'Her oppsto middelalderbyen Berlin på 1200-tallet. Kvartalet ble sterkt ødelagt i krigen og delvis gjenoppbygd i DDR-tiden, og er i dag en sjarmerende kontrast til betongen rundt Alexanderplatz.',
         tip: 'Ta en sen lunsj i et av de gamle vertshusene. Hotellet ligger ti minutter unna.', how: 'Ca. 3 min gange.' },
+      { cat: 'fri', emoji: '🛍️', title: 'RAW Flohmarkt', photo: './assets/e74379b089895c19fc43b0eac2daba7c.jpg', de: 'Revaler Straße 99', time: '14:00', dur: 'valgfritt',
+        lat: 52.50763, lon: 13.45436, far: true, q: 'RAW Flohmarkt, Revaler Straße 99, 10245 Berlin', origin: 'Nikolaikirche, Berlin', mode: 'transit', short: 'RAW Flohmarkt',
+        text: 'Bruktmarked på RAW-Gelände, et tidligere jernbaneverksted fra 1867 som i dag er dekket av gatekunst. Søndag 8. november er siste marked for året.',
+        tip: 'Åpent søndag fra morgenen til ca. kl. 17. Sett av tid til å hente bagasjen før flyet.',
+        extraEmoji: '👕', extraLabel: 'Flanelljakten, del 2:', extra: 'Fant du ikke skjorta på Mauerpark, er dette sjanse nummer to.', how: 'S-Bahn Alexanderplatz → Warschauer Straße, så ca. 5 min gange.' },
       { cat: 'reise', emoji: '✈️', title: 'Hjemreise', de: 'Flughafen BER', time: '20:05', dur: 'flyavgang',
         q: 'Flughafen BER, Schönefeld', origin: HOTEL, mode: 'transit',
         text: 'Flyet går kl. 20:05. Hent bagasjen på hotellet og ta S9 fra Jannowitzbrücke tilbake til BER, samme tog som torsdag.',
@@ -677,7 +695,7 @@ var SELFIES = [
 ];
 
 var DEX = [
-  { id: 'curry', no: '#001', name: 'Currywurst', img: './assets/969d4efa13c48f305d10ec92f9d4a8fe.png', type: '🌶️ Krydret', rarity: '★☆☆ Vanlig',
+  { id: 'curry', no: '#001', name: 'Currywurst', img: './assets/9ab52aae23752850ab585107f6ad3415.jpg', type: '🌶️ Krydret', rarity: '★☆☆ Vanlig',
     habitat: 'Curry 36 ved Warschauer Str. (fre) · Curry61 (søn)', ability: 'Ketchup-angrep:', abilityText: 'treffer skjorta fra to meters avstand.',
     quote: '«Michelin? Nei. Berlin? Absolutt.»' },
   { id: 'kase', no: '#002', name: 'Käsebrötchen', img: './assets/96ae826d2e051afec1f50e63814de75e.png', type: '🥐 Bakst', rarity: '★☆☆ Vanlig',
@@ -689,7 +707,7 @@ var DEX = [
   { id: 'pfann', no: '#004', name: 'Pfannkuchen', img: './assets/86edc16d756372a15c9616a2dc2c5607.png', type: '🍩 Søt', rarity: '★☆☆ Vanlig',
     habitat: 'Bakerier langs hele ruta', ability: 'Melisregn:', abilityText: 'etterlater bevis på jakka i flere timer.',
     quote: '«Bestill en Berliner i Berlin, og du avslører deg som turist.»' },
-  { id: 'spati', no: '#005', name: 'Späti', img: './assets/51d2c470e89bceeaf764c9152459b835.png', type: '🌙 Sosial', rarity: '★★★ Legendarisk',
+  { id: 'spati', no: '#005', name: 'Späti', img: './assets/87e60a85978e92a2d2000ded3bb79b08.jpg', type: '🌙 Sosial', rarity: '★★★ Legendarisk',
     habitat: 'Rundt hotellet, allerede torsdag kveld', ability: 'Nattevakt:', abilityText: 'åpent når alt annet har stengt.',
     quote: '«Berlins svar på dagligvare, pub og møteplass i ett.»' }
 ];
@@ -793,9 +811,9 @@ class Component extends DCLogic {
 
     var program = [
       { day: 'Torsdag', date: '5. NOV', icon: '🛬', items: [['reise', '✈️', '20:00', 'Ankomst BER, S9 til Jannowitzbrücke'], ['reise', '🏨', 'Kveld', 'Innsjekk på The Social Hub'], ['fri', '🍺', 'Kveld', 'Späti-opplevelse']] },
-      { day: 'Fredag', date: '6. NOV', icon: '🎮', items: [['fri', '🥐', '07–10:30', 'Frokost'], ['oblig', '🎮', '10:30', 'WhatAGame, Revaler Str. 100'], ['oblig', '🍽️', '14:00', 'Felleslunsj på Jäger & Lustig'], ['sight', '🎨', 'Ettermiddag', 'East Side Gallery og Oberbaumbrücke'], ['fri', '🍔', 'Kveld', 'Kreuzberg og frilek']] },
+      { day: 'Fredag', date: '6. NOV', icon: '🎮', items: [['fri', '🥐', '07–10:30', 'Frokost'], ['oblig', '🎮', '10:30', 'WhatAGame, Revaler Str. 100'], ['oblig', '🍽️', '14:00', 'Felleslunsj på Jäger & Lustig'], ['sight', '🎨', 'Ettermiddag', 'East Side Gallery og Oberbaumbrücke'], ['fri', '🍺', 'Kveld', 'Kreuzberg, Markthalle Neun og frilek']] },
       { day: 'Lørdag', date: '7. NOV', icon: '🏛️', items: [['fri', '🥐', '08–11', 'Frokost, spis tidlig'], ['sight', '🏛️', '09–14', 'De store severdighetene i Mitte'], ['fri', '🛍️', 'Ettermiddag', 'KaDeWe (stengt søndag)'], ['oblig', '🍛', '19:00', 'Fellesmiddag på Aapka']] },
-      { day: 'Søndag', date: '8. NOV', icon: '📷', items: [['fri', '🥐', '08–11', 'Frokost og utsjekk'], ['sight', '🧱', '09–13', 'Berlin Wall Memorial og Øst-Berlin'], ['fri', '🌭', 'Lunsj', 'Currywurst og frilek'], ['reise', '✈️', '20:05', 'Flyavgang fra BER']] }
+      { day: 'Søndag', date: '8. NOV', icon: '📷', items: [['fri', '🥐', '08–11', 'Frokost og utsjekk'], ['sight', '🧱', '09–13', 'Berlin Wall Memorial og Øst-Berlin'], ['fri', '🌭', 'Lunsj', 'Currywurst og frilek'], ['fri', '🛍️', '14:00', 'RAW Flohmarkt (valgfritt)'], ['reise', '✈️', '20:05', 'Flyavgang fra BER']] }
     ].map(function (d) {
       return { day: d.day, date: d.date, icon: d.icon, items: d.items.map(function (r) { var c = CAT[r[0]]; return { emoji: r[1], t: r[2], label: r[3], c: c.c, tint: c.tint, text: c.text }; }) };
     });
@@ -820,7 +838,7 @@ class Component extends DCLogic {
         eyebrow: DD.label.toUpperCase() + ' · ' + x.time + ' · ' + x.dur.toUpperCase(),
         text: x.text, tip: x.tip, hasPhotoTip: !!x.photoTip, photoTip: x.photoTip || '',
         hasExtra: !!x.extra, extraEmoji: x.extraEmoji || '', extraLabel: x.extraLabel || '', extra: x.extra || '',
-        hasPhoto: !!x.photo, noPhoto: !x.photo, photo: x.photo || '', credit: x.credit || '',
+        hasPhoto: !!x.photo, noPhoto: !x.photo, photo: x.photo || '', credit: x.credit || '', hasCredit: !!x.credit,
         hasSelfie: !!sel, selfieN: sel ? sel.n : '', selfieLine: sel ? sel.caption : '',
         noMap: !x.lat, how: x.how, legUrl: legUrl, legLabel: legLabel
       };
