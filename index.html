@@ -1,0 +1,930 @@
+<!doctype html>
+<html lang="nb">
+<head>
+<meta charset="utf-8">
+<title>Berlin 2026 – helgeguide</title>
+<script src="./vendor/react.js"></script>
+<script src="./vendor/react-dom.js"></script>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&amp;family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#F7F3EE}
+a{color:#1E5866}a:hover{color:#123E48}
+*{box-sizing:border-box}
+.root{height:100vh;min-height:560px;display:flex;flex-direction:column;overflow:hidden;outline:none;font-family:'DM Sans',system-ui,sans-serif}
+.stage{position:relative;flex:1;min-height:0;overflow:hidden}
+.layer{position:absolute;inset:0}
+.stopgrid{display:grid;grid-template-columns:54% 46%;height:100%}
+.photo{position:relative;overflow:hidden;height:100%}
+.textcol{padding:34px 44px 0 44px;display:flex;flex-direction:column;gap:12px}
+.mapcard{position:absolute;right:36px;bottom:20px;width:calc(46% - 80px);max-width:480px}
+.daygrid{display:grid;grid-template-columns:1fr 1.05fr;height:100%}
+.frame4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.selfie6{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.dex5{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}
+.side4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+@keyframes pop{0%{transform:scale(1)}40%{transform:scale(1.06) rotate(-1.5deg)}100%{transform:scale(1)}}
+.pop{animation:pop .45s cubic-bezier(.2,.7,.2,1)}
+.ov{display:grid;grid-template-columns:1fr 1fr;gap:48px;height:100%}
+.btn{font:inherit;cursor:pointer;border:0}
+.btn:focus-visible,.lnk:focus-visible{outline:2px solid #1E5866;outline-offset:2px}
+.blob{position:absolute;border-radius:50%;pointer-events:none}
+.credit:empty{display:none}
+@keyframes rise{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+@keyframes kb{from{transform:scale(1)}to{transform:scale(1.1)}}
+@keyframes draw{from{stroke-dashoffset:1400}to{stroke-dashoffset:0}}
+@keyframes pulse{0%{transform:scale(.7);opacity:.85}100%{transform:scale(2.6);opacity:0}}
+@keyframes drift{0%{transform:translate(0,0)}50%{transform:translate(14px,-10px)}100%{transform:translate(0,0)}}
+@keyframes sweep{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+.r1{animation:rise .75s cubic-bezier(.2,.7,.2,1) both .05s}
+.r2{animation:rise .75s cubic-bezier(.2,.7,.2,1) both .16s}
+.r3{animation:rise .75s cubic-bezier(.2,.7,.2,1) both .27s}
+.r4{animation:rise .75s cubic-bezier(.2,.7,.2,1) both .38s}
+.r5{animation:rise .75s cubic-bezier(.2,.7,.2,1) both .49s}
+.fd{animation:fade 1.1s ease both}
+.kb{animation:kb 14s ease-out both}
+.draw{stroke-dasharray:1400;animation:draw 3s cubic-bezier(.6,.1,.2,1) both .3s}
+.pulse{transform-box:fill-box;transform-origin:center;animation:pulse 1.8s ease-out infinite}
+.drift{animation:drift 12s ease-in-out infinite}
+.sweep{transform-origin:left;animation:sweep 1.1s cubic-bezier(.2,.7,.2,1) both .5s}
+.mk{transition:transform .9s cubic-bezier(.65,0,.25,1)}
+@media (prefers-reduced-motion: reduce){.r1,.r2,.r3,.r4,.r5,.fd,.kb,.draw,.sweep,.pulse,.drift{animation:none}.mk{transition:none}}
+@media (max-width:760px){
+.root{height:auto;min-height:100vh;overflow:visible}
+.stage{flex:none;overflow:visible}
+.layer{position:relative;inset:auto}
+.stopgrid,.daygrid,.ov{grid-template-columns:1fr;height:auto;gap:20px}
+.photo{height:40vh;min-height:240px}
+.textcol{padding:22px 16px 8px 16px}
+.mapcard{position:relative;right:auto;bottom:auto;width:auto;max-width:none;margin:8px 16px 96px 16px}
+.frame4{grid-template-columns:1fr}
+.selfie6{grid-template-columns:1fr}
+.dex5{grid-template-columns:1fr 1fr}
+.side4{grid-template-columns:1fr}
+.hide-m{display:none !important}
+.navwrap{position:fixed;left:0;right:0;bottom:0;z-index:20}
+.pad-m{padding:24px 16px 110px 16px !important}
+.big-m{font-size:84px !important}
+.h-m{font-size:40px !important}
+}
+</style>
+</helmet>
+<div class="root" tabIndex="0" ref="{{ setRoot }}" onKeyDown="{{ onKey }}" onMouseMove="{{ onMove }}" onTouchStart="{{ onTouchStart }}" onTouchEnd="{{ onTouchEnd }}" style="background: #F7F3EE; color: #1F2A37">
+
+<!-- TOP BAR -->
+<header style="height: 56px; flex: none; display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 0 24px; background: #F7F3EE; border-bottom: 1px solid #E6DDD0; position: relative; z-index: 5">
+<button class="btn" onClick="{{ goHome }}" style="background: transparent; color: #1E5866; display: flex; align-items: baseline; gap: 8px; padding: 6px 0; min-height: 44px" aria-label="Til forsiden">
+<span style="font-family: 'Instrument Serif', Georgia, serif; font-size: 26px">Berlin</span>
+<span style="font-size: 12px; font-weight: 700; letter-spacing: .18em; color: #B5523F">2026</span>
+</button>
+<nav class="hide-m" aria-label="Kapitler" style="display: flex; gap: 4px; flex-wrap: wrap">
+<sc-for list="{{ chapters }}" as="c" hint-placeholder-count="8">
+<button class="btn" onClick="{{ c.go }}" style="min-height: 34px; padding: 6px 12px; border-radius: 999px; font-size: 13px; font-weight: 600; background: {{ c.bg }}; color: {{ c.fg }}; transition: background .3s">{{ c.label }}</button>
+</sc-for>
+</nav>
+<div style="font-size: 12px; font-weight: 600; letter-spacing: .14em; color: #5A6472; font-variant-numeric: tabular-nums">{{ counter }}</div>
+</header>
+
+<main class="stage">
+
+<!-- ============ TITLE ============ -->
+<sc-if value="{{ isTitle }}" hint-placeholder-val="{{ true }}">
+<section class="layer" style="background: #F7F3EE; overflow: hidden">
+<div class="blob drift hide-m" style="width: 420px; height: 420px; right: -60px; top: -80px; background: radial-gradient(circle at 40% 40%, rgba(106,159,168,.35), rgba(106,159,168,0) 68%)"></div>
+<div class="blob drift hide-m" style="width: 300px; height: 300px; right: 300px; bottom: -110px; background: radial-gradient(circle at 50% 50%, rgba(232,196,104,.38), rgba(232,196,104,0) 68%); animation-delay: -4s"></div>
+<div class="blob drift" style="width: 240px; height: 240px; left: -70px; bottom: -60px; background: radial-gradient(circle at 50% 50%, rgba(91,74,139,.18), rgba(91,74,139,0) 70%); animation-delay: -8s"></div>
+<div class="pad-m" style="position: relative; z-index: 2; height: 100%; padding: 56px 72px; display: flex; flex-direction: column; justify-content: center; gap: 20px; max-width: 900px">
+<div class="r1" style="font-size: 13px; font-weight: 700; letter-spacing: .22em; color: #B5523F">VELFERDSTUR · 5.–8. NOVEMBER · 48 KOLLEGER</div>
+<h1 class="r2 big-m" style="margin: 0; font-family: 'Instrument Serif', Georgia, serif; font-weight: 400; font-size: 168px; line-height: .86; color: #1E5866">Berlin <span style="font-style: italic; color: #B5523F">2026</span></h1>
+<p class="r3" style="margin: 0; font-family: 'Instrument Serif', Georgia, serif; font-size: 34px; line-height: 1.15; color: #2B3A4A">To dager. Én by. <span style="font-style: italic">Seks obligatoriske selfier.</span> 📸</p>
+<div class="r4" style="display: flex; gap: 12px; flex-wrap: wrap; margin-top: 14px">
+<button class="btn" onClick="{{ next }}" style="min-height: 48px; padding: 0 26px; border-radius: 999px; background: #1E5866; color: #FFFFFF; font-weight: 700; font-size: 15px; display: flex; align-items: center; gap: 10px">Start turen
+<svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" style="fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+</button>
+<button class="btn" onClick="{{ goSelfie }}" style="min-height: 48px; padding: 0 22px; border-radius: 999px; background: #FFFFFF; color: #1E5866; border: 1px solid #CFDCE0; font-weight: 600; font-size: 15px">📸 Selfie-utfordringen</button>
+</div>
+<div class="r5" style="font-size: 13px; color: #5A6472">Alt er frivillig utenom fellesprogrammet · bruk piltastene eller sveip</div>
+</div>
+<svg class="hide-m" viewBox="0 0 400 620" aria-hidden="true" style="position: absolute; right: 90px; bottom: 0; height: 92%; width: auto; overflow: visible">
+<g style="fill: none; stroke: #6A9FA8; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round">
+<path class="draw" d="M228 6 L228 120 M222 120 L234 120 L236 168 L220 168 Z"></path>
+<circle class="draw" cx="228" cy="206" r="38" style="fill: rgba(106,159,168,.12)"></circle>
+<path class="draw" d="M190 206 L266 206 M200 186 L256 186 M200 226 L256 226"></path>
+<path class="draw" d="M214 244 L222 244 L222 600 L208 600 Z M242 244 L234 244 L234 600 L248 600 Z"></path>
+</g>
+<g style="fill: none; stroke: #E8C468; stroke-width: 1.6; stroke-linecap: round">
+<path class="draw" d="M0 600 L400 600"></path>
+<path class="draw" d="M20 600 L20 520 L120 520 L120 600 M30 520 L30 504 L110 504 L110 520 M58 504 L58 494 L82 494 L82 504 M34 600 L34 540 M50 600 L50 540 M70 600 L70 540 M90 600 L90 540 M106 600 L106 540"></path>
+<path class="draw" d="M290 600 L290 560 L380 560 L380 600 M300 560 L300 548 L370 548 L370 560 M335 548 L335 530"></path>
+</g>
+</svg>
+</section>
+</sc-if>
+
+<!-- ============ OVERVIEW (4 days) ============ -->
+<sc-if value="{{ isOverview }}" hint-placeholder-val="{{ false }}">
+<section class="layer pad-m" style="padding: 44px 72px 32px 72px; overflow: auto">
+<div class="ov">
+<div style="display: flex; flex-direction: column; justify-content: center; gap: 16px">
+<div class="r1" style="font-size: 13px; font-weight: 700; letter-spacing: .2em; color: #B5523F">HELGEN I KORTE TREKK</div>
+<h2 class="r2 h-m" style="margin: 0; font-family: 'Instrument Serif', Georgia, serif; font-weight: 400; font-size: 64px; line-height: 1; color: #1E5866">Fire dager, <span style="font-style: italic">én plan</span></h2>
+<p class="r3" style="margin: 0; font-size: 17px; line-height: 1.55; color: #3A4656; max-width: 460px">Fellesprogrammet ligger fast. Rundt det har vi lagt forslag til sightseeing som passer klokkeslettene. Bli med på det du vil, alene eller i små grupper.</p>
+<div class="r4" style="display: flex; flex-direction: column; gap: 8px; margin-top: 6px">
+<sc-for list="{{ legend }}" as="l" hint-placeholder-count="4">
+<div style="display: flex; align-items: center; gap: 10px; font-size: 14px; color: #3A4656">
+<span style="width: 28px; height: 28px; border-radius: 8px; display: grid; place-items: center; background: {{ l.tint }}; border: 1.5px solid {{ l.c }}; font-size: 14px">{{ l.emoji }}</span>
+<span><strong style="color: {{ l.text }}">{{ l.label }}</strong> · {{ l.desc }}</span>
+</div>
+</sc-for>
+</div>
+</div>
+<div style="display: flex; flex-direction: column; justify-content: center; gap: 4px">
+<sc-for list="{{ overview }}" as="d" hint-placeholder-count="4">
+<button class="btn r3" onClick="{{ d.go }}" style="display: grid; grid-template-columns: 56px 1fr 24px; align-items: center; gap: 16px; padding: 16px 14px; min-height: 76px; border-radius: 16px; background: transparent; text-align: left; color: #1F2A37; border-bottom: 1px solid #E6DDD0">
+<span style="width: 52px; height: 52px; border-radius: 14px; display: grid; place-items: center; font-size: 26px; background: {{ d.tint }}">{{ d.icon }}</span>
+<span style="display: flex; flex-direction: column; gap: 3px">
+<span style="font-size: 19px; font-weight: 700">{{ d.title }}</span>
+<span style="font-size: 14px; color: #5A6472">{{ d.sub }}</span>
+</span>
+<svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" style="fill: none; stroke: #8A94A3; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round"><path d="M9 6l6 6-6 6"></path></svg>
+</button>
+</sc-for>
+</div>
+</div>
+</section>
+</sc-if>
+
+<!-- ============ FULL PROGRAM (color-coded) ============ -->
+<sc-if value="{{ isProgram }}" hint-placeholder-val="{{ false }}">
+<section class="layer pad-m" style="padding: 34px 48px 24px 48px; display: flex; flex-direction: column; gap: 18px; overflow: auto">
+<div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 20px; flex-wrap: wrap">
+<div style="display: flex; flex-direction: column; gap: 6px">
+<div class="r1" style="font-size: 13px; font-weight: 700; letter-spacing: .2em; color: #B5523F">HELE PROGRAMMET</div>
+<h2 class="r2 h-m" style="margin: 0; font-family: 'Instrument Serif', Georgia, serif; font-weight: 400; font-size: 52px; line-height: 1; color: #1E5866">Fast program og <span style="font-style: italic">frie forslag</span></h2>
+</div>
+<div class="r2" style="display: flex; gap: 14px; flex-wrap: wrap">
+<sc-for list="{{ legend }}" as="l" hint-placeholder-count="4">
+<span style="display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; color: {{ l.text }}"><span style="width: 12px; height: 12px; border-radius: 4px; background: {{ l.c }}"></span>{{ l.label }}</span>
+</sc-for>
+</div>
+</div>
+<div class="frame4 r3">
+<sc-for list="{{ program }}" as="d" hint-placeholder-count="4">
+<article style="background: #FFFFFF; border: 1px solid #E6DDD0; border-radius: 18px; padding: 16px 14px 14px 14px; display: flex; flex-direction: column; gap: 8px">
+<div style="display: flex; align-items: center; gap: 10px; padding: 0 4px 4px 4px">
+<span style="font-size: 22px">{{ d.icon }}</span>
+<span style="display: flex; flex-direction: column">
+<span style="font-family: 'Instrument Serif', Georgia, serif; font-size: 26px; line-height: 1; color: #1E5866">{{ d.day }}</span>
+<span style="font-size: 11px; font-weight: 700; letter-spacing: .12em; color: #5A6472">{{ d.date }}</span>
+</span>
+</div>
+<sc-for list="{{ d.items }}" as="it" hint-placeholder-count="4">
+<div style="display: grid; grid-template-columns: 22px 1fr; gap: 8px; align-items: start; padding: 8px 10px; border-radius: 10px; background: {{ it.tint }}; border-left: 0; box-shadow: inset 3px 0 0 {{ it.c }}">
+<span style="font-size: 14px; line-height: 1.3">{{ it.emoji }}</span>
+<span style="display: flex; flex-direction: column; gap: 1px">
+<span style="font-size: 12px; font-weight: 700; color: {{ it.text }}; font-variant-numeric: tabular-nums">{{ it.t }}</span>
+<span style="font-size: 13px; line-height: 1.3; color: #1F2A37">{{ it.label }}</span>
+</span>
+</div>
+</sc-for>
+</article>
+</sc-for>
+</div>
+</section>
+</sc-if>
+
+<!-- ============ DAY DIVIDER ============ -->
+<sc-if value="{{ isDay }}" hint-placeholder-val="{{ false }}">
+<section class="layer" style="background: {{ day.bg }}; overflow: auto">
+<div class="blob drift hide-m" style="width: 380px; height: 380px; left: -120px; top: -120px; background: radial-gradient(circle, rgba(255,255,255,.7), rgba(255,255,255,0) 70%)"></div>
+<div class="daygrid" style="position: relative">
+<div class="pad-m" style="padding: 48px 32px 48px 72px; display: flex; flex-direction: column; justify-content: center; gap: 14px">
+<div class="r1" style="font-size: 52px; line-height: 1">{{ day.icon }}</div>
+<div class="r1" style="font-size: 13px; font-weight: 700; letter-spacing: .2em; color: #B5523F">{{ day.when }}</div>
+<div class="r2 big-m" style="font-family: 'Instrument Serif', Georgia, serif; font-size: 128px; line-height: .86; font-style: italic; color: #1E5866">{{ day.label }}</div>
+<h2 class="r3 h-m" style="margin: 0; font-family: 'Instrument Serif', Georgia, serif; font-weight: 400; font-size: 44px; line-height: 1.04; color: #1F2A37">{{ day.title }}</h2>
+<p class="r4" style="margin: 0; font-size: 16px; line-height: 1.55; color: #3A4656; max-width: 480px">{{ day.lede }}</p>
+<div class="r5" style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 4px">
+<button class="btn" onClick="{{ next }}" style="min-height: 46px; padding: 0 22px; border-radius: 999px; background: #1E5866; color: #FFFFFF; font-weight: 700; font-size: 15px">Første stopp →</button>
+<sc-if value="{{ day.hasAll }}" hint-placeholder-val="{{ true }}">
+<a class="lnk" href="{{ day.allUrl }}" target="_blank" rel="noopener" style="min-height: 46px; padding: 0 20px; border-radius: 999px; background: #FFFFFF; color: #1E5866; border: 1px solid #CFDCE0; font-weight: 600; font-size: 15px; display: inline-flex; align-items: center; text-decoration: none">🗺️ Ruten i Google Maps ↗</a>
+</sc-if>
+</div>
+</div>
+<div class="pad-m" style="padding: 40px 64px 40px 16px; display: flex; flex-direction: column; justify-content: center; gap: 6px">
+<sc-for list="{{ day.list }}" as="st" hint-placeholder-count="6">
+<button class="btn r3" onClick="{{ st.go }}" style="display: grid; grid-template-columns: 54px 30px 1fr; align-items: center; gap: 10px; padding: 7px 12px; min-height: 44px; border-radius: 12px; background: {{ st.tint }}; box-shadow: inset 3px 0 0 {{ st.c }}; color: #1F2A37; text-align: left">
+<span style="font-size: 13px; font-weight: 700; color: {{ st.text }}; font-variant-numeric: tabular-nums">{{ st.time }}</span>
+<span style="font-size: 18px">{{ st.emoji }}</span>
+<span style="font-size: 16px; font-weight: 600; line-height: 1.2">{{ st.title }}</span>
+</button>
+</sc-for>
+</div>
+</div>
+</section>
+</sc-if>
+
+<!-- ============ STOP (A) ============ -->
+<sc-if value="{{ isStopA }}" hint-placeholder-val="{{ false }}">
+<section class="layer">
+<div class="stopgrid">
+<div class="photo" style="background: {{ s.tint }}">
+<sc-if value="{{ s.hasPhoto }}" hint-placeholder-val="{{ false }}">
+<div style="position: absolute; inset: -24px; transform: {{ par }}; transition: transform .7s ease-out"><img class="kb" src="{{ s.photo }}" alt="{{ s.title }}" style="width: 100%; height: 100%; object-fit: cover; display: block"></div>
+<div class="credit" style="position: absolute; right: 12px; top: 10px; font-size: 11px; color: #FFFFFF; background: rgba(31,42,55,.55); padding: 3px 8px; border-radius: 6px">{{ s.credit }}</div>
+</sc-if>
+<sc-if value="{{ s.noPhoto }}" hint-placeholder-val="{{ true }}">
+<div class="fd" style="position: absolute; inset: -24px; transform: {{ par }}; transition: transform .7s ease-out; background-image: radial-gradient(rgba(31,42,55,.10) 1px, transparent 1.3px); background-size: 18px 18px"></div>
+<div class="blob drift" style="width: 360px; height: 360px; right: -60px; top: -40px; background: radial-gradient(circle, rgba(255,255,255,.75), rgba(255,255,255,0) 70%)"></div>
+<div class="kb" style="position: absolute; inset: 0; display: grid; place-items: center; font-size: 170px; line-height: 1">{{ s.emoji }}</div>
+<div class="r2" style="position: absolute; left: 40px; top: 34px; right: 40px; display: flex; flex-direction: column; gap: 4px">
+<div style="font-size: 11px; font-weight: 700; letter-spacing: .2em; color: {{ s.text }}">FOTO KOMMER</div>
+<div style="font-family: 'Instrument Serif', Georgia, serif; font-style: italic; font-size: 28px; line-height: 1.1; color: #1F2A37">{{ s.de }}</div>
+</div>
+</sc-if>
+<sc-if value="{{ s.hasSelfie }}" hint-placeholder-val="{{ false }}">
+<div class="r4" style="position: absolute; left: 22px; right: 22px; bottom: 20px; display: flex; gap: 12px; align-items: center; padding: 12px 16px; border-radius: 14px; background: rgba(255,255,255,.94); color: #1F2A37; max-width: 560px; box-shadow: 0 10px 30px -18px rgba(31,42,55,.5)">
+<span style="flex: none; width: 36px; height: 36px; border-radius: 50%; background: #E8C468; display: grid; place-items: center; font-size: 17px">📸</span>
+<span style="font-size: 14px; line-height: 1.4"><strong>Selfie #{{ s.selfieN }}.</strong> {{ s.selfieLine }}</span>
+</div>
+</sc-if>
+</div>
+<div class="textcol">
+<div class="r1" style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap">
+<span style="font-size: 12px; font-weight: 700; letter-spacing: .08em; padding: 4px 10px; border-radius: 999px; background: {{ s.tint }}; color: {{ s.text }}; border: 1px solid {{ s.c }}">{{ s.catLabel }}</span>
+<span style="font-size: 12px; font-weight: 700; letter-spacing: .14em; color: #5A6472">{{ s.eyebrow }}</span>
+</div>
+<h2 class="r2 h-m" style="margin: 0; font-family: 'Instrument Serif', Georgia, serif; font-weight: 400; font-size: 54px; line-height: .98; color: #1E5866">{{ s.title }}</h2>
+<p class="r3" style="margin: 0; font-size: 16px; line-height: 1.55; color: #2B3A4A; text-wrap: pretty">{{ s.text }}</p>
+<sc-if value="{{ s.hasPhotoTip }}" hint-placeholder-val="{{ false }}">
+<p class="r4" style="margin: 0; font-size: 14px; line-height: 1.45; color: #3A4656; text-wrap: pretty">📸 <strong style="color: #1F2A37">Fototips:</strong> {{ s.photoTip }}</p>
+</sc-if>
+<p class="r4" style="margin: 0; font-size: 14px; line-height: 1.45; color: #3A4656; text-wrap: pretty">💡 <strong style="color: #1F2A37">Tips:</strong> {{ s.tip }}</p>
+<sc-if value="{{ s.hasExtra }}" hint-placeholder-val="{{ false }}">
+<p class="r5" style="margin: 0; font-size: 14px; line-height: 1.45; color: #3A4656; text-wrap: pretty">{{ s.extraEmoji }} <strong style="color: #8A6512">{{ s.extraLabel }}</strong> {{ s.extra }}</p>
+</sc-if>
+<sc-if value="{{ s.noMap }}" hint-placeholder-val="{{ false }}">
+<div class="r5" style="display: flex; flex-direction: column; gap: 10px; align-items: flex-start; margin-top: 6px">
+<div style="font-size: 13px; color: #5A6472">🚶 {{ s.how }}</div>
+<a class="lnk" href="{{ s.legUrl }}" target="_blank" rel="noopener" style="min-height: 40px; padding: 0 16px; border-radius: 999px; background: #1E5866; color: #FFFFFF; font-size: 13px; font-weight: 700; display: inline-flex; align-items: center; text-decoration: none">{{ s.legLabel }} ↗</a>
+</div>
+</sc-if>
+</div>
+</div>
+</section>
+</sc-if>
+
+<!-- ============ STOP (B) — identical, alternates so entrance animations replay ============ -->
+<sc-if value="{{ isStopB }}" hint-placeholder-val="{{ false }}">
+<section class="layer">
+<div class="stopgrid">
+<div class="photo" style="background: {{ s.tint }}">
+<sc-if value="{{ s.hasPhoto }}" hint-placeholder-val="{{ false }}">
+<div style="position: absolute; inset: -24px; transform: {{ par }}; transition: transform .7s ease-out"><img class="kb" src="{{ s.photo }}" alt="{{ s.title }}" style="width: 100%; height: 100%; object-fit: cover; display: block"></div>
+<div class="credit" style="position: absolute; right: 12px; top: 10px; font-size: 11px; color: #FFFFFF; background: rgba(31,42,55,.55); padding: 3px 8px; border-radius: 6px">{{ s.credit }}</div>
+</sc-if>
+<sc-if value="{{ s.noPhoto }}" hint-placeholder-val="{{ true }}">
+<div class="fd" style="position: absolute; inset: -24px; transform: {{ par }}; transition: transform .7s ease-out; background-image: radial-gradient(rgba(31,42,55,.10) 1px, transparent 1.3px); background-size: 18px 18px"></div>
+<div class="blob drift" style="width: 360px; height: 360px; left: -60px; bottom: -40px; background: radial-gradient(circle, rgba(255,255,255,.75), rgba(255,255,255,0) 70%)"></div>
+<div class="kb" style="position: absolute; inset: 0; display: grid; place-items: center; font-size: 170px; line-height: 1">{{ s.emoji }}</div>
+<div class="r2" style="position: absolute; left: 40px; top: 34px; right: 40px; display: flex; flex-direction: column; gap: 4px">
+<div style="font-size: 11px; font-weight: 700; letter-spacing: .2em; color: {{ s.text }}">FOTO KOMMER</div>
+<div style="font-family: 'Instrument Serif', Georgia, serif; font-style: italic; font-size: 28px; line-height: 1.1; color: #1F2A37">{{ s.de }}</div>
+</div>
+</sc-if>
+<sc-if value="{{ s.hasSelfie }}" hint-placeholder-val="{{ false }}">
+<div class="r4" style="position: absolute; left: 22px; right: 22px; bottom: 20px; display: flex; gap: 12px; align-items: center; padding: 12px 16px; border-radius: 14px; background: rgba(255,255,255,.94); color: #1F2A37; max-width: 560px; box-shadow: 0 10px 30px -18px rgba(31,42,55,.5)">
+<span style="flex: none; width: 36px; height: 36px; border-radius: 50%; background: #E8C468; display: grid; place-items: center; font-size: 17px">📸</span>
+<span style="font-size: 14px; line-height: 1.4"><strong>Selfie #{{ s.selfieN }}.</strong> {{ s.selfieLine }}</span>
+</div>
+</sc-if>
+</div>
+<div class="textcol">
+<div class="r1" style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap">
+<span style="font-size: 12px; font-weight: 700; letter-spacing: .08em; padding: 4px 10px; border-radius: 999px; background: {{ s.tint }}; color: {{ s.text }}; border: 1px solid {{ s.c }}">{{ s.catLabel }}</span>
+<span style="font-size: 12px; font-weight: 700; letter-spacing: .14em; color: #5A6472">{{ s.eyebrow }}</span>
+</div>
+<h2 class="r2 h-m" style="margin: 0; font-family: 'Instrument Serif', Georgia, serif; font-weight: 400; font-size: 54px; line-height: .98; color: #1E5866">{{ s.title }}</h2>
+<p class="r3" style="margin: 0; font-size: 16px; line-height: 1.55; color: #2B3A4A; text-wrap: pretty">{{ s.text }}</p>
+<sc-if value="{{ s.hasPhotoTip }}" hint-placeholder-val="{{ false }}">
+<p class="r4" style="margin: 0; font-size: 14px; line-height: 1.45; color: #3A4656; text-wrap: pretty">📸 <strong style="color: #1F2A37">Fototips:</strong> {{ s.photoTip }}</p>
+</sc-if>
+<p class="r4" style="margin: 0; font-size: 14px; line-height: 1.45; color: #3A4656; text-wrap: pretty">💡 <strong style="color: #1F2A37">Tips:</strong> {{ s.tip }}</p>
+<sc-if value="{{ s.hasExtra }}" hint-placeholder-val="{{ false }}">
+<p class="r5" style="margin: 0; font-size: 14px; line-height: 1.45; color: #3A4656; text-wrap: pretty">{{ s.extraEmoji }} <strong style="color: #8A6512">{{ s.extraLabel }}</strong> {{ s.extra }}</p>
+</sc-if>
+<sc-if value="{{ s.noMap }}" hint-placeholder-val="{{ false }}">
+<div class="r5" style="display: flex; flex-direction: column; gap: 10px; align-items: flex-start; margin-top: 6px">
+<div style="font-size: 13px; color: #5A6472">🚶 {{ s.how }}</div>
+<a class="lnk" href="{{ s.legUrl }}" target="_blank" rel="noopener" style="min-height: 40px; padding: 0 16px; border-radius: 999px; background: #1E5866; color: #FFFFFF; font-size: 13px; font-weight: 700; display: inline-flex; align-items: center; text-decoration: none">{{ s.legLabel }} ↗</a>
+</div>
+</sc-if>
+</div>
+</div>
+</section>
+</sc-if>
+
+<!-- ============ PERSISTENT MAP ============ -->
+<sc-if value="{{ showMap }}" hint-placeholder-val="{{ false }}">
+<aside class="mapcard" aria-label="Kart over dagens rute" style="z-index: 3; background: #FFFFFF; border: 1px solid #E6DDD0; border-radius: 18px; box-shadow: 0 18px 40px -26px rgba(31,42,55,.45); overflow: hidden">
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 10px 14px 4px 14px; flex-wrap: wrap">
+<div style="font-size: 11px; font-weight: 700; letter-spacing: .12em; color: #1E5866">{{ map.head }}</div>
+<div style="display: flex; gap: 10px; font-size: 11px; color: #5A6472">
+<span style="display: inline-flex; align-items: center; gap: 4px"><span style="width: 8px; height: 8px; border-radius: 50%; background: #2E6690"></span>Besøkt</span>
+<span style="display: inline-flex; align-items: center; gap: 4px"><span style="width: 10px; height: 10px; border-radius: 50%; background: #E8C468; border: 1.5px solid #8A6512"></span>Nå</span>
+<span style="display: inline-flex; align-items: center; gap: 4px"><span style="width: 8px; height: 8px; border-radius: 50%; border: 1.5px solid #2E6690; background: #FFFFFF"></span>Neste</span>
+</div>
+</div>
+<svg viewBox="0 0 440 230" role="img" aria-label="{{ map.aria }}" style="display: block; width: 100%; height: auto; background: #FBF9F5">
+<sc-for list="{{ map.grid }}" as="g" hint-placeholder-count="10">
+<line x1="{{ g.x1 }}" y1="{{ g.y1 }}" x2="{{ g.x2 }}" y2="{{ g.y2 }}" style="stroke: #EFE8DC; stroke-width: 1"></line>
+</sc-for>
+<polyline points="{{ map.all }}" style="fill: none; stroke: #A9B4C2; stroke-width: 1.6; stroke-dasharray: 3 5; stroke-linecap: round"></polyline>
+<polyline points="{{ map.done }}" style="fill: none; stroke: #6A9FA8; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round"></polyline>
+<sc-for list="{{ map.pts }}" as="p" hint-placeholder-count="7">
+<g class="mk" style="transform: translate({{ p.x }}px, {{ p.y }}px)">
+<circle cx="0" cy="0" r="8" style="fill: {{ p.fill }}; stroke: {{ p.stroke }}; stroke-width: 1.6"></circle>
+<text x="0" y="3" text-anchor="middle" style="font: 700 8px 'DM Sans', sans-serif; fill: {{ p.tc }}">{{ p.n }}</text>
+</g>
+</sc-for>
+<g class="mk" style="transform: translate({{ map.mx }}px, {{ map.my }}px)">
+<circle class="pulse" cx="0" cy="0" r="10" style="fill: rgba(232,196,104,.6)"></circle>
+<circle cx="0" cy="0" r="12" style="fill: #E8C468; stroke: #8A6512; stroke-width: 2"></circle>
+<text x="0" y="4" text-anchor="middle" style="font: 700 11px 'DM Sans', sans-serif; fill: #1F2A37">{{ map.curN }}</text>
+<text x="{{ map.lx }}" y="4" text-anchor="{{ map.anchor }}" style="font: 700 11px 'DM Sans', sans-serif; fill: #1F2A37; paint-order: stroke; stroke: #FBF9F5; stroke-width: 4px; stroke-linejoin: round">{{ map.curName }}</text>
+</g>
+<g style="stroke: #5A6472; stroke-width: 1.2">
+<line x1="16" y1="214" x2="{{ map.barEnd }}" y2="214"></line>
+<line x1="16" y1="210" x2="16" y2="218"></line>
+<line x1="{{ map.barEnd }}" y1="210" x2="{{ map.barEnd }}" y2="218"></line>
+</g>
+<text x="16" y="205" style="font: 600 9px 'DM Sans', sans-serif; fill: #5A6472">{{ map.barLabel }}</text>
+<g transform="translate(418 24)">
+<path d="M0 -12 L6 6 L0 2 L-6 6 Z" style="fill: #1E5866"></path>
+<text x="0" y="18" text-anchor="middle" style="font: 700 9px 'DM Sans', sans-serif; fill: #1E5866">N</text>
+</g>
+</svg>
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 6px 14px 10px 14px; border-top: 1px solid #EFE8DC; flex-wrap: wrap">
+<div style="font-size: 11px; color: #5A6472; line-height: 1.35; flex: 1 1 180px">{{ map.how }}</div>
+<a class="lnk" href="{{ map.legUrl }}" target="_blank" rel="noopener" style="flex: none; min-height: 36px; padding: 0 14px; border-radius: 999px; background: #1E5866; color: #FFFFFF; font-size: 12px; font-weight: 700; display: inline-flex; align-items: center; text-decoration: none">{{ map.legLabel }} ↗</a>
+</div>
+</aside>
+</sc-if>
+
+<!-- ============ KULTURJAKTEN: 5 starter cards ============ -->
+<sc-if value="{{ isDex }}" hint-placeholder-val="{{ false }}">
+<section class="layer pad-m" style="background: #FBF1D8; padding: 26px 40px 18px 40px; display: flex; flex-direction: column; gap: 14px; overflow: auto">
+<div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 20px; flex-wrap: wrap">
+<div style="display: flex; flex-direction: column; gap: 6px; max-width: 760px">
+<div class="r1" style="font-size: 13px; font-weight: 700; letter-spacing: .2em; color: #7A5A0E">🥨 BONUS · KULTURJAKTEN</div>
+<h2 class="r2 h-m" style="margin: 0; font-family: 'Instrument Serif', Georgia, serif; font-weight: 400; font-size: 54px; line-height: 1; color: #1E5866">Samle dem alle. <span style="font-style: italic; color: #B5523F">Spis noen av dem.</span></h2>
+<p class="r3" style="margin: 0; font-size: 15px; line-height: 1.5; color: #3A4656">Du trenger verken museer, dyre restauranter eller guidede turer. Ekte tysk kultur bor på bakeriet, i kiosken og på gatehjørnet. Fem vanlige arter lever langs sightseeingruta. Fang dem!</p>
+</div>
+<div class="r2" style="display: flex; flex-direction: column; align-items: flex-end; gap: 6px; min-width: 220px">
+<div style="font-family: 'Instrument Serif', Georgia, serif; font-size: 42px; line-height: 1; color: #1F2A37; font-variant-numeric: tabular-nums">{{ dexCount }}<span style="color: #8A94A3">/{{ dexTotal }}</span></div>
+<div style="font-size: 13px; font-weight: 700; color: #7A5A0E">{{ rank }}</div>
+<div style="width: 220px; height: 8px; border-radius: 999px; background: rgba(122,90,14,.15); overflow: hidden"><div style="height: 100%; width: {{ dexBar }}; background: #D9A93A; border-radius: 999px; transition: width .5s cubic-bezier(.2,.7,.2,1)"></div></div>
+</div>
+</div>
+<div class="dex5">
+<sc-for list="{{ dexCards }}" as="d" hint-placeholder-count="5">
+<article class="r3" style="background: #FFFFFF; border-radius: 18px; border: 2px solid {{ d.line }}; overflow: hidden; display: flex; flex-direction: column; box-shadow: {{ d.shadow }}; transition: border-color .4s, box-shadow .4s">
+<div style="position: relative; height: 128px; overflow: hidden; background: #EEE6D6">
+<img src="{{ d.img }}" alt="{{ d.name }}" style="width: 100%; height: 100%; object-fit: cover; display: block; filter: {{ d.filter }}; transition: filter .6s ease">
+<span style="position: absolute; left: 8px; top: 8px; font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 999px; background: rgba(255,255,255,.92); color: #1F2A37">{{ d.type }}</span>
+<span style="position: absolute; right: 8px; top: 8px; font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 999px; background: rgba(31,42,55,.78); color: #FFFFFF; font-variant-numeric: tabular-nums">{{ d.no }}</span>
+</div>
+<div style="padding: 10px 12px 12px 12px; display: flex; flex-direction: column; gap: 6px; flex: 1">
+<div style="display: flex; justify-content: space-between; align-items: baseline; gap: 6px">
+<span style="font-size: 16px; font-weight: 700; color: #1F2A37">{{ d.name }}</span>
+<span style="font-size: 11px; color: #7A5A0E; white-space: nowrap">{{ d.rarity }}</span>
+</div>
+<div style="font-size: 12px; line-height: 1.35; color: #3A4656">📍 {{ d.habitat }}</div>
+<div style="font-size: 12px; line-height: 1.4; color: #1F2A37"><strong>⚡ {{ d.ability }}</strong> {{ d.abilityText }}</div>
+<div style="font-size: 12px; line-height: 1.35; color: #5A6472; font-style: italic; margin-top: auto">{{ d.quote }}</div>
+<button class="btn" onClick="{{ d.toggle }}" aria-pressed="{{ d.pressed }}" style="margin-top: 4px; min-height: 36px; border-radius: 999px; font-size: 12px; font-weight: 700; background: {{ d.btnBg }}; color: {{ d.btnFg }}; border: 1px solid #D9A93A">{{ d.btnLabel }}</button>
+</div>
+</article>
+</sc-for>
+</div>
+</section>
+</sc-if>
+
+<!-- ============ KULTURJAKTEN: side quests ============ -->
+<sc-if value="{{ isSide }}" hint-placeholder-val="{{ false }}">
+<section class="layer pad-m" style="background: #EEF4F1; padding: 28px 44px 20px 44px; display: flex; flex-direction: column; gap: 16px; overflow: auto">
+<div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 20px; flex-wrap: wrap">
+<div style="display: flex; flex-direction: column; gap: 6px; max-width: 760px">
+<div class="r1" style="font-size: 13px; font-weight: 700; letter-spacing: .2em; color: #2F6B5E">🗺️ KULTURJAKTEN · SIDEOPPDRAG</div>
+<h2 class="r2 h-m" style="margin: 0; font-family: 'Instrument Serif', Georgia, serif; font-weight: 400; font-size: 52px; line-height: 1; color: #1E5866">Sjeldnere arter <span style="font-style: italic">for de ivrigste</span></h2>
+<p class="r3" style="margin: 0; font-size: 15px; line-height: 1.5; color: #3A4656">Ingen av dem krever billett, guide eller reservasjon. Bare nysgjerrighet og noen euro i lomma.</p>
+</div>
+<div class="r2" style="display: flex; flex-direction: column; align-items: flex-end; gap: 6px; min-width: 220px">
+<div style="font-family: 'Instrument Serif', Georgia, serif; font-size: 42px; line-height: 1; color: #1F2A37; font-variant-numeric: tabular-nums">{{ dexCount }}<span style="color: #8A94A3">/{{ dexTotal }}</span></div>
+<div style="font-size: 13px; font-weight: 700; color: #2F6B5E">{{ rank }}</div>
+<div style="width: 220px; height: 8px; border-radius: 999px; background: rgba(47,107,94,.15); overflow: hidden"><div style="height: 100%; width: {{ dexBar }}; background: #4E9A86; border-radius: 999px; transition: width .5s cubic-bezier(.2,.7,.2,1)"></div></div>
+</div>
+</div>
+<div class="side4">
+<sc-for list="{{ sideCards }}" as="d" hint-placeholder-count="8">
+<article class="r3" style="background: #FFFFFF; border-radius: 16px; border: 2px solid {{ d.line }}; padding: 10px; display: grid; grid-template-columns: 64px 1fr; gap: 10px; align-items: start; transition: border-color .4s">
+<div style="width: 64px; height: 64px; border-radius: 12px; overflow: hidden; background: #E3EEE9; display: grid; place-items: center; font-size: 32px">
+<sc-if value="{{ d.hasImg }}" hint-placeholder-val="{{ true }}"><img src="{{ d.img }}" alt="{{ d.name }}" style="width: 64px; height: 64px; object-fit: cover; display: block; filter: {{ d.filter }}; transition: filter .6s ease"></sc-if>
+<sc-if value="{{ d.noImg }}" hint-placeholder-val="{{ false }}"><span style="filter: {{ d.filter }}">{{ d.emoji }}</span></sc-if>
+</div>
+<div style="display: flex; flex-direction: column; gap: 4px; min-width: 0">
+<div style="font-size: 14px; font-weight: 700; color: #1F2A37">{{ d.name }}</div>
+<div style="font-size: 12px; line-height: 1.35; color: #3A4656">{{ d.text }}</div>
+<button class="btn" onClick="{{ d.toggle }}" aria-pressed="{{ d.pressed }}" style="align-self: flex-start; margin-top: 2px; min-height: 30px; padding: 0 10px; border-radius: 999px; font-size: 11px; font-weight: 700; background: {{ d.btnBg }}; color: {{ d.btnFg }}; border: 1px solid #4E9A86">{{ d.btnLabel }}</button>
+</div>
+</article>
+</sc-for>
+</div>
+<div class="r4" style="font-size: 13px; color: #3A4656">🏆 Rangstige: Nyankommet turist → Brötchen-lærling → Kiez-kjenner → Späti-stamgjest → Nesten berliner → <strong>Ich bin ein Berliner!</strong></div>
+</section>
+</sc-if>
+
+<!-- ============ SELFIE CHALLENGE ============ -->
+<sc-if value="{{ isSelfie }}" hint-placeholder-val="{{ false }}">
+<section class="layer pad-m" style="background: #F3EFF7; padding: 32px 48px 24px 48px; display: flex; flex-direction: column; gap: 18px; overflow: auto">
+<div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; flex-wrap: wrap">
+<div style="display: flex; flex-direction: column; gap: 6px">
+<div class="r1" style="font-size: 13px; font-weight: 700; letter-spacing: .22em; color: #5B4A8B">📸 SPESIALOPPDRAG</div>
+<h2 class="r2 h-m" style="margin: 0; font-family: 'Instrument Serif', Georgia, serif; font-weight: 400; font-size: 60px; line-height: 1; color: #1E5866">The Berlin <span style="font-style: italic; color: #5B4A8B">Selfie Challenge</span></h2>
+</div>
+<div class="r2" style="display: flex; flex-direction: column; align-items: flex-end; gap: 4px">
+<div style="font-family: 'Instrument Serif', Georgia, serif; font-size: 44px; line-height: 1; color: #1F2A37; font-variant-numeric: tabular-nums">{{ takenCount }}<span style="color: #8A94A3">/6</span></div>
+<div style="font-size: 13px; color: #3A4656">Del i Spond-gruppen. Premie: evig ære 🏆</div>
+</div>
+</div>
+<div class="selfie6">
+<sc-for list="{{ selfies }}" as="c" hint-placeholder-count="6">
+<article class="r3" style="border-radius: 18px; padding: 16px 16px 14px 16px; display: flex; flex-direction: column; gap: 8px; background: {{ c.bg }}; border: 1.5px solid {{ c.line }}; transition: background .35s">
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 10px">
+<div style="display: flex; align-items: center; gap: 10px">
+<span style="font-size: 26px">{{ c.emoji }}</span>
+<span style="display: flex; flex-direction: column">
+<span style="font-size: 11px; font-weight: 700; letter-spacing: .12em; color: {{ c.text }}">SELFIE {{ c.n }}</span>
+<span style="font-size: 16px; font-weight: 700; color: #1F2A37">{{ c.place }}</span>
+</span>
+</div>
+<button class="btn" onClick="{{ c.toggle }}" aria-pressed="{{ c.pressed }}" style="min-height: 36px; padding: 0 12px; border-radius: 999px; font-size: 12px; font-weight: 700; display: inline-flex; align-items: center; gap: 6px; background: {{ c.btnBg }}; color: {{ c.btnFg }}; border: 1px solid {{ c.line }}">
+<svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true" style="fill: none; stroke: currentColor; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg>{{ c.btnLabel }}</button>
+</div>
+<p style="margin: 0; font-size: 15px; line-height: 1.45; color: #1F2A37">{{ c.caption }}</p>
+<div style="font-size: 12px; color: #5A6472; margin-top: auto">{{ c.when }}</div>
+</article>
+</sc-for>
+</div>
+</section>
+</sc-if>
+
+<!-- ============ END ============ -->
+<sc-if value="{{ isEnd }}" hint-placeholder-val="{{ false }}">
+<section class="layer pad-m" style="background: #F7F3EE; display: flex; flex-direction: column; justify-content: center; align-items: flex-start; gap: 20px; padding: 56px 72px; overflow: auto">
+<div class="blob drift hide-m" style="width: 460px; height: 460px; right: -80px; bottom: -120px; background: radial-gradient(circle, rgba(106,159,168,.3), rgba(106,159,168,0) 68%)"></div>
+<div class="r1" style="font-size: 13px; font-weight: 700; letter-spacing: .22em; color: #B5523F">GOD TUR 🧳</div>
+<h2 class="r2 h-m" style="margin: 0; font-family: 'Instrument Serif', Georgia, serif; font-weight: 400; font-size: 88px; line-height: .96; max-width: 1000px; color: #1E5866; position: relative">Ingen timeplan. Ingen forpliktelser. <span style="font-style: italic; color: #B5523F">Bare Berlin.</span></h2>
+<p class="r3" style="margin: 0; font-family: 'Instrument Serif', Georgia, serif; font-size: 34px; color: #2B3A4A">Velg dine stopp. Ta med kamera. 📸</p>
+<p class="r3" style="margin: 0; font-size: 14px; color: #5A6472">(Med unntak av whatagame, lunsjen, middagen og flyet. De er ganske obligatoriske.)</p>
+<div class="r4" style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 6px; position: relative">
+<sc-for list="{{ endLinks }}" as="l" hint-placeholder-count="3">
+<a class="lnk" href="{{ l.url }}" target="_blank" rel="noopener" style="min-height: 44px; padding: 0 18px; border-radius: 999px; background: #1E5866; color: #FFFFFF; font-weight: 700; font-size: 14px; display: inline-flex; align-items: center; text-decoration: none">{{ l.label }} ↗</a>
+</sc-for>
+<button class="btn" onClick="{{ goHome }}" style="min-height: 44px; padding: 0 18px; border-radius: 999px; background: #FFFFFF; color: #1E5866; border: 1px solid #CFDCE0; font-weight: 600; font-size: 14px">Start på nytt</button>
+</div>
+<div class="r5" style="font-size: 12px; color: #5A6472">Koordinater fra Wikipedia og offentlige stedsoppføringer. Gangruter beregnes av Google Maps.</div>
+</section>
+</sc-if>
+
+</main>
+
+<!-- BOTTOM NAV -->
+<div class="navwrap" style="flex: none; background: #F7F3EE; border-top: 1px solid #E6DDD0; position: relative; z-index: 6">
+<div style="position: absolute; left: 0; top: -1px; height: 3px; width: {{ progress }}; background: #6A9FA8; transition: width .6s cubic-bezier(.2,.7,.2,1)"></div>
+<div style="height: 56px; padding: 0 16px 0 24px; display: flex; align-items: center; justify-content: space-between; gap: 12px">
+<div style="font-size: 13px; font-weight: 600; color: #3A4656; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0">{{ footLabel }}</div>
+<div style="display: flex; gap: 8px; flex: none">
+<button class="btn" onClick="{{ prev }}" aria-label="Forrige lysbilde" style="width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; background: #ECE5DA; color: #1F2A37">
+<svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" style="fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round"><path d="M19 12H5M11 6l-6 6 6 6"></path></svg>
+</button>
+<button class="btn" onClick="{{ next }}" aria-label="Neste lysbilde" style="width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; background: #1E5866; color: #FFFFFF">
+<svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" style="fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+</button>
+</div>
+</div>
+</div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+var HOTEL = 'Alexanderstraße 40, 10179 Berlin';
+
+/* Category palette: distinct hues AND lightness */
+var CAT = {
+  reise: { label: '🧳 REISE & HOTELL', short: 'Reise & hotell', emoji: '🧳', c: '#6E5BA6', tint: '#EEEAF6', text: '#4E3F82', desc: 'fly, tog og hotell' },
+  oblig: { label: '⭐ FELLESPROGRAM', short: 'Fellesprogram', emoji: '⭐', c: '#C0573F', tint: '#F8E7E1', text: '#9A3F2B', desc: 'obligatorisk, alle sammen' },
+  sight: { label: '📍 SIGHTSEEING', short: 'Sightseeing', emoji: '📍', c: '#2E6E9E', tint: '#E3EDF6', text: '#235A82', desc: 'frivillige forslag' },
+  fri:   { label: '🎈 FRILEK', short: 'Frilek', emoji: '🎈', c: '#D9A93A', tint: '#FBF1D8', text: '#7A5A0E', desc: 'fritid, mat og valgfrie stopp' }
+};
+
+var DAYS = [
+  { key: 'tor', label: 'Torsdag', date: '5. november', when: 'TORSDAG 5. NOVEMBER · KVELD', icon: '🛬', bg: '#EEEAF6',
+    title: 'Ankomst, hotell og Späti', sub: 'Ankomst, hotellet og Späti-opplevelse',
+    lede: 'Vi lander kl. 20:00. Tog inn til byen, sjekk inn, og så en liten introduksjon til Berlins nattåpne kiosk-kultur.',
+    stops: [
+      { cat: 'reise', emoji: '🏨', title: 'The Social Hub', photo: './assets/d17551278cc7cddca83168fd916f6138.png', de: 'Alexanderstraße 40', time: '20:00', dur: 'ankomst',
+        q: 'The Social Hub Berlin Alexanderplatz, Alexanderstraße 40, 10179 Berlin', origin: 'Flughafen BER, Schönefeld', mode: 'transit',
+        text: 'Vi lander kl. 20:00. Ta S9 fra flyplassen til Jannowitzbrücke (går hvert 20. minutt) og gå videre til hotellet på Alexanderstraße 40.',
+        tip: 'Kjøp billett i BVG-appen. Den koster 5 euro, så last ned appen før avreise.', how: 'S9 til Jannowitzbrücke, så kort gange.' },
+      { cat: 'fri', emoji: '🍺', title: 'Späti-opplevelsen', de: 'Spätkauf', time: 'Kveld', dur: 'valgfritt',
+        q: 'Späti near Alexanderstraße 40, Berlin', origin: HOTEL, mode: 'walking',
+        text: 'Spätkauf, eller «Späti», er Berlins nattåpne kiosk og nabolagets uoffisielle møteplass. Kjøp en kald Berliner Pilsner eller Club-Mate og nyt den ute.',
+        tip: 'Ta med flasken tilbake til kiosken. Det er pant (Pfand) på den.', how: 'Det finnes Spätis i gatene rundt hotellet.' }
+    ] },
+  { key: 'fre', label: 'Fredag', date: '6. november', when: 'FREDAG 6. NOVEMBER', icon: '🎮', bg: '#F8E7E1',
+    title: 'Gameshow, lunsj og Murens kunst', sub: 'WhatAGame + felleslunsj → East Side Gallery og Kreuzberg',
+    lede: 'Formiddagen er felles. Etter lunsj ligger East Side Gallery, Oberbaumbrücke og Kreuzberg noen få minutter unna.',
+    stops: [
+      { cat: 'oblig', emoji: '🎮', title: 'WhatAGame', de: 'Revaler Straße 100', time: '10:30', dur: 'ca. 2,5 t',
+        q: 'Revaler Straße 100, 10243 Berlin', origin: HOTEL, mode: 'walking',
+        text: 'Et privat gameshow der lagene konkurrerer i kunnskap, taktikk, fysisk behendighet og morsomme utfordringer. Det ligger i Friedrichshain, nær RAW-Gelände, et tidligere jernbaneområde kjent for graffiti og uteliv.',
+        tip: 'Showet varer normalt rundt 2,5 timer. Frokost serveres 07:00–10:30, så spis i god tid.', how: 'Ca. 40 min gange fra hotellet.' },
+      { cat: 'oblig', emoji: '🍽️', title: 'Jäger & Lustig', de: 'Grünberger Straße 1', time: '14:00', dur: 'felleslunsj',
+        lat: 52.51339, lon: 13.44806, q: 'Jäger & Lustig, Grünberger Straße 1, 10243 Berlin', origin: 'Revaler Straße 100, 10243 Berlin', mode: 'walking', short: 'Jäger & Lustig',
+        text: 'Et tradisjonelt tysk vertshus med regional husmannskost og sesongretter som vilt og gås. Restauranten står i Michelin-guiden og serverer ordentlig tysk mat, ikke turistmat.',
+        tip: 'Bestill gjerne noe du ikke ville valgt hjemme. Det er dagen for det.', how: 'Ca. 9 min gange fra WhatAGame.' },
+      { cat: 'sight', emoji: '🎨', title: 'East Side Gallery', photo: './assets/174ed58fd46a30015016838fbecdb40e.png', de: 'Mühlenstraße', time: '15:45', dur: '45 min',
+        lat: 52.50529, lon: 13.44131, q: 'East Side Gallery, Berlin', mode: 'walking', short: 'East Side Gallery', selfie: 4,
+        text: 'En 1,3 km lang bevart del av Berlinmuren, malt som utendørs kunstgalleri etter murens fall. Her finner du det verdensberømte kysset mellom Bresjnev og Honecker, og Trabanten som bryter gjennom muren.',
+        tip: 'Gå østover mot Oberbaumbrücke, da ender du rett ved broen.', how: 'Ca. 15 min gange fra lunsjen.' },
+      { cat: 'sight', emoji: '🌉', title: 'Oberbaumbrücke', photo: './assets/a46964a407c69fd1f5526d976a971f44.png', de: 'Oberbaumbrücke', time: '16:30', dur: '20 min',
+        lat: 52.50194, lon: 13.44583, q: 'Oberbaumbrücke, Berlin', mode: 'walking', short: 'Oberbaumbrücke', selfie: 5,
+        text: 'En av Berlins vakreste broer, med karakteristiske røde teglsteinstårn. Den var grenseovergang mellom Øst- og Vest-Berlin, og symboliserer i dag gjenforeningen.',
+        tip: 'Vent på at den gule U-banen ruller over broen.',
+        extraEmoji: '🌭', extraLabel: 'Currywurst:', extra: 'Curry 36 ligger i stasjonsbygget på Warschauer Straße, rett ved broen.', how: 'Ca. 5 min gange.' },
+      { cat: 'fri', emoji: '🍔', title: 'Kreuzberg og Burgermeister', de: 'Schlesisches Tor', time: '17:00', dur: 'frilek',
+        lat: 52.50123, lon: 13.44166, q: 'Burgermeister Schlesisches Tor, Oberbaumstraße 8, Berlin', mode: 'walking', short: 'Schlesisches Tor',
+        text: 'En berømt burgerkiosk i et ombygd offentlig toalett under U-banesporene. Veldig Berlin. Herfra kan du utforske Wrangelkiez og resten av Kreuzberg.',
+        tip: 'Rett etter felleslunsj holder det kanskje å gå forbi og se på stedet, med mindre appetitten er tilbake. Resten av kvelden er frilek.', how: 'Over broen, ca. 5 min gange.' }
+    ] },
+  { key: 'lor', label: 'Lørdag', date: '7. november', when: 'LØRDAG 7. NOVEMBER · 09:00–14:00 + ETTERMIDDAG', icon: '🏛️', bg: '#E3EDF6',
+    title: 'De store severdighetene og KaDeWe', sub: 'KaDeWe + de store severdighetene → fellesmiddag kl. 19',
+    lede: 'Klassikerne i Mitte til fots fra kl. 09, KaDeWe på ettermiddagen (stengt søndag) og indisk fellesmiddag kl. 19.',
+    stops: [
+      { cat: 'sight', emoji: '🏛️', title: 'Reichstag', de: 'Reichstagsgebäude', time: '09:15', dur: '60 min',
+        lat: 52.51861, lon: 13.37611, q: 'Reichstagsgebäude, Berlin', origin: HOTEL, mode: 'transit', short: 'Reichstag', selfie: 2,
+        text: 'Den tyske nasjonalforsamlingens bygning fra 1894. Den er kjent for riksdagsbrannen i 1933, krigens slutt i 1945 og den moderne glasskuppelen som symboliserer åpenhet i demokratiet.',
+        photoTip: 'Fra den store plassen Platz der Republik.',
+        tip: 'Kuppelen er gratis, men krever forhåndsregistrering på bundestag.de. Ta med gyldig ID.', how: 'U5 Alexanderplatz → Bundestag, ca. 15 min.' },
+      { cat: 'sight', emoji: '🏛️', title: 'Brandenburger Tor', de: 'Pariser Platz', time: '10:25', dur: '15 min',
+        lat: 52.51628, lon: 13.37770, q: 'Brandenburger Tor, Berlin', mode: 'walking', short: 'Brandenburger Tor', selfie: 1,
+        text: 'Berlins mest ikoniske monument, bygget i 1791. Porten lå ved grensen mellom øst og vest under den kalde krigen og ble et verdenssymbol på frihet og gjenforening i 1989.',
+        photoTip: 'Stå på Pariser Platz og få med alle søylene og quadrigaen på toppen.',
+        tip: 'Tidlig på dagen er det færre turister i bildet.', how: 'Ca. 5 min gange.' },
+      { cat: 'sight', emoji: '🕯️', title: 'Holocaust-minnesmerket', de: 'Denkmal für die ermordeten Juden Europas', time: '10:45', dur: '25 min',
+        lat: 52.51389, lon: 13.37889, q: 'Denkmal für die ermordeten Juden Europas, Berlin', mode: 'walking', short: 'Minnesmerket',
+        text: 'Over 2 700 betongblokker til minne om Europas seks millioner myrdede jøder. Blokkene varierer i høyde og gir en sterk følelse av desorientering når du går mellom dem.',
+        tip: 'Dette er et sted for ettertanke. Ikke klatre eller hopp på blokkene.', how: 'Ca. 5 min gange.' },
+      { cat: 'sight', emoji: '🏙️', title: 'Potsdamer Platz', de: 'Potsdamer Platz', time: '11:20', dur: '20 min',
+        lat: 52.50944, lon: 13.37611, q: 'Potsdamer Platz, Berlin', mode: 'walking', short: 'Potsdamer Platz',
+        text: 'Før andre verdenskrig var dette et av Europas travleste bykryss. Under delingen ble det nærmest en ødemark ved Muren, og i dag er det moderne arkitektur og et symbol på gjenoppbyggingen.',
+        tip: 'Se etter Mur-segmentene ved stasjonsinngangen.', how: 'Ca. 10 min gange langs Ebertstraße.' },
+      { cat: 'sight', emoji: '🧱', title: 'Topographie des Terrors', de: 'Niederkirchnerstraße 8', time: '11:45', dur: '40 min',
+        lat: 52.50670, lon: 13.38370, q: 'Topographie des Terrors, Berlin', mode: 'walking', short: 'Topographie',
+        text: 'Her hadde Gestapo, SS og deler av nazistenes terrorapparat sine hovedkvarter. Du ser en bevart del av Berlinmuren og en utendørs utstilling om regimets forbrytelser, uten å gå på museum.',
+        tip: 'Utendørsutstillingen langs Muren gir mye på kort tid.', how: 'Ca. 8 min gange.' },
+      { cat: 'sight', emoji: '🪖', title: 'Checkpoint Charlie', de: 'Friedrichstraße', time: '12:30', dur: '15 min',
+        lat: 52.50750, lon: 13.39028, q: 'Checkpoint Charlie, Berlin', mode: 'walking', short: 'Checkpoint Charlie', selfie: 3,
+        text: 'Den mest kjente grenseovergangen mellom amerikansk og sovjetisk sektor. Stedet er kjent for stridsvognkonfrontasjonen i 1961, da supermaktene var svært nær en militær konfrontasjon.',
+        photoTip: 'Grenseboden og skiltet «You are leaving the American sector».',
+        tip: 'De uniformerte «soldatene» tar betalt for bilder. Skiltet er gratis.', how: 'Ca. 8 min gange.' },
+      { cat: 'sight', emoji: '🍫', title: 'Gendarmenmarkt og Rausch', de: 'Gendarmenmarkt', time: '12:55', dur: '35 min',
+        lat: 52.51361, lon: 13.39278, q: 'Gendarmenmarkt, Berlin', mode: 'walking', short: 'Gendarmenmarkt',
+        text: 'Et av Berlins vakreste torg, omgitt av Konzerthaus og to monumentale kirker. Rett ved ligger Rausch, et stort sjokoladehus med praliner og varm sjokolade.',
+        tip: 'Den varme sjokoladen hos Rausch passer godt som pause i november.',
+        extraEmoji: '🥨', extraLabel: 'Lunsj:', extra: 'Friedrichstraße rundt hjørnet har alt fra bakeri til imbiss.', how: 'Ca. 8 min gange.' },
+      { cat: 'sight', emoji: '📚', title: 'Bebelplatz', photo: './assets/f45baa1164625941e8a621c31d08175e.png', de: 'Bebelplatz', time: '13:35', dur: '10 min',
+        lat: 52.51639, lon: 13.39389, q: 'Bebelplatz, Berlin', mode: 'walking', short: 'Bebelplatz',
+        text: 'Et historisk torg ved Humboldt-universitetet, der nazistene organiserte bokbrenningen 10. mai 1933.',
+        tip: 'Se ned gjennom glassplaten i bakken. Under ligger et minnesmerke med tomme bokhyller.', how: 'Ca. 5 min gange.' },
+      { cat: 'sight', emoji: '🌳', title: 'Unter den Linden og Neue Wache', de: 'Unter den Linden 4', time: '13:45', dur: '10 min',
+        lat: 52.51750, lon: 13.39556, q: 'Neue Wache, Unter den Linden 4, Berlin', mode: 'walking', short: 'Neue Wache',
+        text: 'Unter den Linden er Berlins historiske paradegate fra Brandenburger Tor til det gamle kongelige sentrum. Neue Wache er Tysklands sentrale minnesmerke over ofre for krig og tyranni.',
+        tip: 'Gå inn og se Käthe Kollwitz-skulpturen under takåpningen. Det er gratis.', how: 'Ca. 3 min gange.' },
+      { cat: 'sight', emoji: '⛪', title: 'Museumsinsel og Berliner Dom', photo: './assets/b126b662cf36bae3bbe006746dde771c.png', de: 'Lustgarten', time: '14:00', dur: 'ruten slutter',
+        lat: 52.51880, lon: 13.39900, q: 'Lustgarten, Berlin', mode: 'walking', short: 'Museumsinsel',
+        text: 'Museumsinsel er et UNESCO-verdensarvområde med fem store museer. Berliner Dom er en monumental kirke fra keisertiden med imponerende kuppel, og arkitekturen kan nytes uten å gå inn.',
+        photoTip: 'Den klassiske vinkelen får du fra Lustgarten, med hele domen bak deg.',
+        tip: 'Herfra er det ca. 20 minutter å gå tilbake til hotellet.', how: 'Ca. 5 min gange.' },
+      { cat: 'fri', emoji: '🛍️', title: 'KaDeWe', photo: './assets/716c389345fccb0375eb3ea0ba3dcf21.png', de: 'Kaufhaus des Westens', time: '15:00', dur: 'ettermiddag',
+        lat: 52.50194, lon: 13.34278, far: true, q: 'KaDeWe, Tauentzienstraße 21-24, Berlin', origin: 'Lustgarten, Berlin', mode: 'transit', short: 'KaDeWe',
+        text: 'Kaufhaus des Westens åpnet i 1907 og er Europas nest største varehus og et symbol på Vest-Berlins velstand. Gå rett til den spektakulære delikatesseavdelingen i 6. etasje.',
+        tip: 'Åpent lørdag 10–21, stengt søndag. Lørdag er derfor eneste mulighet.', how: 'U2 til Wittenbergplatz, ca. 20–25 min.' },
+      { cat: 'oblig', emoji: '🍛', title: 'Fellesmiddag på Aapka', de: 'Kastanienallee 50', time: '19:00', dur: 'felles',
+        lat: 52.53400, lon: 13.40479, far: true, q: 'Aapka, Kastanienallee 50, 10119 Berlin', origin: HOTEL, mode: 'transit', short: 'Aapka',
+        text: 'Indisk restaurant i Kastanienallee ved Zionskirchplatz, mellom Mitte og Prenzlauer Berg. Området er kjent for kafeer, restauranter og avslappet byliv i bygårder fra slutten av 1800-tallet.',
+        tip: 'Kom litt tidligere og ta en runde i nabolaget før maten.', how: 'Kollektivt eller ca. 30 min gange fra hotellet.' }
+    ] },
+  { key: 'son', label: 'Søndag', date: '8. november', when: 'SØNDAG 8. NOVEMBER · 09:00 → FLY 20:05', icon: '📷', bg: '#E5F0EF',
+    title: 'Muren og historiske Øst-Berlin', sub: 'Berlin Wall Memorial + historiske Øst-Berlin → fly kl. 20:05',
+    lede: 'Muren slik den faktisk var, currywurst ved Hackescher Markt og DDR-Berlin rundt Alexanderplatz. Vi avslutter like ved hotellet, i god tid før flyet.',
+    stops: [
+      { cat: 'sight', emoji: '🧱', title: 'Berlin Wall Memorial', de: 'Gedenkstätte Berliner Mauer', time: '09:15', dur: '45–60 min',
+        lat: 52.53500, lon: 13.39000, q: 'Gedenkstätte Berliner Mauer, Bernauer Straße 111, Berlin', origin: HOTEL, mode: 'transit', short: 'Bernauer Str.',
+        text: 'Et av de beste stedene for å forstå hvordan muren faktisk fungerte, med bevart mur, vakttårn og dødssone. I denne gaten hoppet folk fra vinduene sine for å flykte til Vest i 1961.',
+        photoTip: 'Fotografer grenseanlegget fra utsiktspunktet.',
+        tip: 'Gratis inngang. Beregn 45–60 minutter.',
+        extraEmoji: '👕', extraLabel: 'Valgfritt:', extra: 'Mauerpark-loppemarkedet åpner kl. 10, ti minutter unna. Her starter jakten på flanellskjorta.', how: 'U8 Alexanderplatz → Bernauer Straße, ca. 10 min.' },
+      { cat: 'sight', emoji: '🌭', title: 'Hackesche Höfe og Curry61', photo: './assets/f17748459080716a1cef2342bcfd4894.png', de: 'Hackescher Markt', time: '10:30', dur: '45 min',
+        lat: 52.52417, lon: 13.40222, q: 'Hackesche Höfe, Berlin', mode: 'walking', short: 'Hackesche Höfe', selfie: 6,
+        text: 'Et nettverk av restaurerte bakgårder med jugendstilarkitektur, små butikker og kafeer, der du ser et mer hverdagslig og kreativt Berlin.',
+        tip: 'Mange butikker er stengt på søndag, men gårdene er like fine.',
+        extraEmoji: '🌭', extraLabel: 'Curry61:', extra: 'Like ved på Oranienburger Straße 6, åpent søndag fra kl. 11. Currywurst med pommes er obligatorisk turistmat.', how: 'Tram/S-Bahn eller ca. 25 min gange.' },
+      { cat: 'sight', emoji: '📡', title: 'Alexanderplatz og TV-tårnet', photo: './assets/dafc5571285fa00da1d6667dca6a0e51.png', de: 'Weltzeituhr', time: '11:45', dur: '20 min',
+        lat: 52.52117, lon: 13.41331, q: 'Weltzeituhr, Alexanderplatz, Berlin', mode: 'walking', short: 'Alexanderplatz',
+        text: 'Alexanderplatz var et sentralt byrom i DDR, og det 368 meter høye TV-tårnet ble fullført i 1969 som et prestisjeprosjekt. Se også Weltzeituhr, verdensklokken som viser tiden i byer over hele verden.',
+        photoTip: 'Verdensklokken med TV-tårnet i bakgrunnen.',
+        tip: 'Klassisk Berlin-møtested: «Wir treffen uns an der Weltzeituhr».', how: 'Ca. 12 min gange.' },
+      { cat: 'sight', emoji: '🏛️', title: 'Rotes Rathaus', de: 'Berliner Rathaus', time: '12:15', dur: '10 min',
+        lat: 52.51861, lon: 13.40833, q: 'Rotes Rathaus, Berlin', mode: 'walking', short: 'Rotes Rathaus',
+        text: 'Berlins røde rådhus har fått navnet sitt fra de karakteristiske røde mursteinene. Bygningen er sete for byregjeringen og en av byens mest gjenkjennelige offentlige bygninger.',
+        tip: 'Neptunbrunnen ligger på plassen rett foran.', how: 'Ca. 5 min gange.' },
+      { cat: 'sight', emoji: '🏘️', title: 'Nikolaiviertel', de: 'Nikolaikirche', time: '12:30', dur: 'ca. 1 t',
+        lat: 52.51694, lon: 13.40722, q: 'Nikolaikirche, Berlin', mode: 'walking', short: 'Nikolaiviertel',
+        text: 'Her oppsto middelalderbyen Berlin på 1200-tallet. Kvartalet ble sterkt ødelagt i krigen og delvis gjenoppbygd i DDR-tiden, og er i dag en sjarmerende kontrast til betongen rundt Alexanderplatz.',
+        tip: 'Ta en sen lunsj i et av de gamle vertshusene. Hotellet ligger ti minutter unna.', how: 'Ca. 3 min gange.' },
+      { cat: 'reise', emoji: '✈️', title: 'Hjemreise', de: 'Flughafen BER', time: '20:05', dur: 'flyavgang',
+        q: 'Flughafen BER, Schönefeld', origin: HOTEL, mode: 'transit',
+        text: 'Flyet går kl. 20:05. Hent bagasjen på hotellet og ta S9 fra Jannowitzbrücke tilbake til BER, samme tog som torsdag.',
+        tip: 'Beregn god tid gjennom sikkerhetskontrollen. Vi har 48 personer og én gate.', how: 'S9 fra Jannowitzbrücke til BER.' }
+    ] }
+];
+
+var SELFIES = [
+  { n: 1, emoji: '🏛️', place: 'Brandenburger Tor', caption: 'Napoleon tok med seg hele quadrigaen hjem til Paris i 1806. Du nøyer deg med en selfie.', when: 'Lørdag · ca. 10:25', cat: 'sight' },
+  { n: 2, emoji: '🇩🇪', place: 'Reichstag', caption: 'Det eneste stedet i Berlin der du helt lovlig kan se ned på politikerne.', when: 'Lørdag · ca. 09:15 · helst i kuppelen', cat: 'reise' },
+  { n: 3, emoji: '🪖', place: 'Checkpoint Charlie', caption: 'Du forlater nå den amerikanske sektoren. Du går inn i køen til neste selfie.', when: 'Lørdag · ca. 12:30', cat: 'oblig' },
+  { n: 4, emoji: '🎨', place: 'East Side Gallery', caption: 'Finn det berømte broderkysset. Hold deg til en high five med kollegaen.', when: 'Fredag · etter lunsj', cat: 'fri' },
+  { n: 5, emoji: '🌉', place: 'Oberbaumbrücke', caption: 'Vent på den gule U-banen. Tålmodighet er også en kunstform.', when: 'Fredag · ca. 16:30', cat: 'sight' },
+  { n: 6, emoji: '🌭', place: 'Currywurst', caption: '«Mit oder ohne Darm?» Bonuspoeng hvis skjorta overlever uten ketchupflekker.', when: 'Curry61 søndag, eller Curry 36 fredag', cat: 'oblig' }
+];
+
+var DEX = [
+  { id: 'curry', no: '#001', name: 'Currywurst', img: './assets/969d4efa13c48f305d10ec92f9d4a8fe.png', type: '🌶️ Krydret', rarity: '★☆☆ Vanlig',
+    habitat: 'Curry 36 ved Warschauer Str. (fre) · Curry61 (søn)', ability: 'Ketchup-angrep:', abilityText: 'treffer skjorta fra to meters avstand.',
+    quote: '«Michelin? Nei. Berlin? Absolutt.»' },
+  { id: 'kase', no: '#002', name: 'Käsebrötchen', img: './assets/96ae826d2e051afec1f50e63814de75e.png', type: '🥐 Bakst', rarity: '★☆☆ Vanlig',
+    habitat: 'Ethvert bakeri, gjerne på vei til Reichstag (lør)', ability: 'Morgenboost:', abilityText: 'holder deg gående helt til Checkpoint Charlie.',
+    quote: '«Det er bare et rundstykke med ost. Helt til du smaker det.»' },
+  { id: 'doner', no: '#003', name: 'Döner', img: './assets/8b10e0a604e126a2e0d91731b9392557.png', type: '🥙 Fusjon', rarity: '★☆☆ Vanlig',
+    habitat: 'Kreuzberg (fre), og omtrent hvert gatehjørne', ability: 'Midnattsredning:', abilityText: 'gjenoppliver trøtte kolleger etter kl. 23.',
+    quote: '«Det mest tyske du kan spise, er kanskje tyrkisk.»' },
+  { id: 'pfann', no: '#004', name: 'Pfannkuchen', img: './assets/86edc16d756372a15c9616a2dc2c5607.png', type: '🍩 Søt', rarity: '★☆☆ Vanlig',
+    habitat: 'Bakerier langs hele ruta', ability: 'Melisregn:', abilityText: 'etterlater bevis på jakka i flere timer.',
+    quote: '«Bestill en Berliner i Berlin, og du avslører deg som turist.»' },
+  { id: 'spati', no: '#005', name: 'Späti', img: './assets/51d2c470e89bceeaf764c9152459b835.png', type: '🌙 Sosial', rarity: '★★★ Legendarisk',
+    habitat: 'Rundt hotellet, allerede torsdag kveld', ability: 'Nattevakt:', abilityText: 'åpent når alt annet har stengt.',
+    quote: '«Berlins svar på dagligvare, pub og møteplass i ett.»' }
+];
+var SIDE = [
+  { id: 'brezel', name: '🥨 Brezel', img: './assets/cce94c5a96c3f0b6e0d509f8d356b5bb.png', text: 'Myk innside, gyllen skorpe. En kringle som tar seg selv litt mer seriøst.' },
+  { id: 'brot', name: '🍞 Roggenbrot', img: './assets/15b1ec9e9514bf3fab2537217427a130.png', text: 'Ekte tysk rugbrød. Her er brød en identitet, ikke bare tilbehør.' },
+  { id: 'ritter', name: '🍫 Ritter Sport', img: './assets/ef75faaf2a2b36089eba6a1740dbe2c7.png', text: 'Finn en smak du aldri har sett i Norge. Kvadratisk, praktisk, tysk.' },
+  { id: 'riesling', name: '🍷 Riesling', img: './assets/c6ea08ce0bf1bc0bf6152ea129e3941f.png', text: 'Halvtørr Riesling passer til indisk mat. Test teorien på Aapka lørdag.' },
+  { id: 'mate', name: '🧉 Club-Mate eller Spezi', img: './assets/f9203b64204490ee39b745de40391d99.png', text: 'Berlins hacker-drivstoff, eller cola med appelsinbrus. +20 hipsterpoeng.' },
+  { id: 'schorle', name: '🍎 Apfelschorle', img: './assets/693809bc77f1e56785f310c12bc1ae0c.png', text: 'Tyskerne fant eplejuice og tenkte: «Dette trenger mer bobler.»' },
+  { id: 'ampel', name: '🚦 Ampelmännchen', emoji: '🚦', text: 'Den lille DDR-mannen med hatt i fotgjengerlysene. Se etter ham i gamle Øst-Berlin.' },
+  { id: 'foto', name: '📷 Photoautomat-selfie', emoji: '📷', text: 'Analoge fotobokser på gatehjørnene. Fire bilder, null filter, ingen angrefrist.' }
+];
+function rankFor(n, total) {
+  if (n >= total) return '🍩 Ich bin ein Berliner!';
+  if (n >= 10) return '🐻 Nesten berliner';
+  if (n >= 7) return '🍺 Späti-stamgjest';
+  if (n >= 4) return '🌭 Kiez-kjenner';
+  if (n >= 1) return '🥨 Brötchen-lærling';
+  return '🧳 Nyankommet turist';
+}
+
+function enc(s) { return encodeURIComponent(s); }
+function dirUrl(o, d, mode) {
+  return 'https://www.google.com/maps/dir/?api=1&origin=' + enc(o) + '&destination=' + enc(d) + '&travelmode=' + mode;
+}
+function routeUrl(stops) {
+  var r = stops.filter(function (s) { return s.lat && !s.far; });
+  if (r.length < 2) return '';
+  var w = r.slice(1, -1).map(function (s) { return s.q; }).join('|');
+  return 'https://www.google.com/maps/dir/?api=1&origin=' + enc(r[0].q) + '&destination=' + enc(r[r.length - 1].q) + (w ? '&waypoints=' + enc(w) : '') + '&travelmode=walking';
+}
+/* Projects every mapped stop; the bbox is the walking route (far stops excluded) unless zoomOut */
+function project(stops, zoomOut) {
+  var W = 440, H = 230, padX = 60, padTop = 36, padBot = 40;
+  var all = stops.filter(function (s) { return s.lat; });
+  var fit = zoomOut ? all : all.filter(function (s) { return !s.far; });
+  var lat0 = 0; fit.forEach(function (s) { lat0 += s.lat; }); lat0 /= fit.length;
+  var k = Math.cos(lat0 * Math.PI / 180);
+  var X = function (s) { return s.lon * k; }, Y = function (s) { return -s.lat; };
+  var minX = Math.min.apply(null, fit.map(X)), maxX = Math.max.apply(null, fit.map(X));
+  var minY = Math.min.apply(null, fit.map(Y)), maxY = Math.max.apply(null, fit.map(Y));
+  var dx = Math.max(maxX - minX, 1e-4), dy = Math.max(maxY - minY, 1e-4);
+  var sc = Math.min((W - 2 * padX) / dx, (H - padTop - padBot) / dy);
+  var offX = (W - dx * sc) / 2, offY = padTop + ((H - padTop - padBot) - dy * sc) / 2;
+  var mPerPx = 111320 / sc;
+  var barM = mPerPx * 90 > 1500 ? 2000 : (mPerPx * 90 > 700 ? 1000 : 500);
+  return {
+    pos: function (s) { return { x: Math.round((X(s) - minX) * sc + offX), y: Math.round((Y(s) - minY) * sc + offY) }; },
+    barPx: Math.round(barM / mPerPx), barLabel: barM >= 1000 ? (barM / 1000) + ' km' : barM + ' m'
+  };
+}
+
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { i: 0, px: 0, py: 0, taken: {}, caught: {} };
+    this.raf = null; this.tx = null;
+  }
+  componentDidMount() { if (this.rootEl && this.rootEl.focus) { try { this.rootEl.focus({ preventScroll: true }); } catch (e) {} } }
+  slides() {
+    var s = [{ kind: 'title', label: 'Berlin 2026' }, { kind: 'overview', label: 'Helgen i korte trekk' }, { kind: 'program', label: 'Hele programmet' }];
+    DAYS.forEach(function (d, di) {
+      s.push({ kind: 'day', d: di, label: d.label + ' · ' + d.title });
+      d.stops.forEach(function (x, j) { s.push({ kind: 'stop', d: di, j: j, label: d.label + ' · ' + x.title }); });
+    });
+    s.push({ kind: 'dex', label: 'Bonus · Kulturjakten' });
+    s.push({ kind: 'side', label: 'Kulturjakten · Sideoppdrag' });
+    s.push({ kind: 'selfie', label: 'The Berlin Selfie Challenge' });
+    s.push({ kind: 'end', label: 'Bare Berlin' });
+    return s;
+  }
+  go(n) {
+    var len = this.slides().length;
+    var t = Math.max(0, Math.min(len - 1, n));
+    if (t !== this.state.i) this.setState({ i: t });
+    try { if (window.innerWidth <= 760) window.scrollTo(0, 0); } catch (e) {}
+  }
+  renderVals() {
+    var self = this;
+    var S = this.slides();
+    var i = this.state.i;
+    var cur = S[i];
+    var find = function (pred) { for (var k = 0; k < S.length; k++) if (pred(S[k])) return k; return 0; };
+    var dayIdx = DAYS.map(function (d, di) { return find(function (x) { return x.kind === 'day' && x.d === di; }); });
+    var iOv = find(function (x) { return x.kind === 'overview'; });
+    var iSel = find(function (x) { return x.kind === 'selfie'; });
+    var iDex = find(function (x) { return x.kind === 'dex'; });
+    var iEnd = S.length - 1;
+
+    var chDefs = [{ label: 'Start', at: 0, until: 0 }, { label: 'Oversikt', at: iOv, until: dayIdx[0] - 1 }];
+    DAYS.forEach(function (d, di) { chDefs.push({ label: d.icon + ' ' + d.label.slice(0, 3), at: dayIdx[di], until: (di < DAYS.length - 1 ? dayIdx[di + 1] : iDex) - 1 }); });
+    chDefs.push({ label: '🥨 Kulturjakt', at: iDex, until: iSel - 1 }, { label: '📸 Selfies', at: iSel, until: iSel }, { label: 'Slutt', at: iEnd, until: iEnd });
+    var chapters = chDefs.map(function (c) {
+      var on = i >= c.at && i <= c.until;
+      return { label: c.label, go: function () { self.go(c.at); }, bg: on ? '#1E5866' : 'transparent', fg: on ? '#FFFFFF' : '#1F2A37' };
+    });
+
+    var legend = ['reise', 'oblig', 'sight', 'fri'].map(function (k) { var c = CAT[k]; return { emoji: c.emoji, label: c.short, desc: c.desc, c: c.c, tint: c.tint, text: c.text }; });
+    var overview = DAYS.map(function (d, di) { return { icon: d.icon, title: d.label + ' ' + d.date, sub: d.sub, tint: d.bg, go: function () { self.go(dayIdx[di]); } }; });
+
+    var program = [
+      { day: 'Torsdag', date: '5. NOV', icon: '🛬', items: [['reise', '✈️', '20:00', 'Ankomst BER, S9 til Jannowitzbrücke'], ['reise', '🏨', 'Kveld', 'Innsjekk på The Social Hub'], ['fri', '🍺', 'Kveld', 'Späti-opplevelse']] },
+      { day: 'Fredag', date: '6. NOV', icon: '🎮', items: [['fri', '🥐', '07–10:30', 'Frokost'], ['oblig', '🎮', '10:30', 'WhatAGame, Revaler Str. 100'], ['oblig', '🍽️', '14:00', 'Felleslunsj på Jäger & Lustig'], ['sight', '🎨', 'Ettermiddag', 'East Side Gallery og Oberbaumbrücke'], ['fri', '🍔', 'Kveld', 'Kreuzberg og frilek']] },
+      { day: 'Lørdag', date: '7. NOV', icon: '🏛️', items: [['fri', '🥐', '08–11', 'Frokost, spis tidlig'], ['sight', '🏛️', '09–14', 'De store severdighetene i Mitte'], ['fri', '🛍️', 'Ettermiddag', 'KaDeWe (stengt søndag)'], ['oblig', '🍛', '19:00', 'Fellesmiddag på Aapka']] },
+      { day: 'Søndag', date: '8. NOV', icon: '📷', items: [['fri', '🥐', '08–11', 'Frokost og utsjekk'], ['sight', '🧱', '09–13', 'Berlin Wall Memorial og Øst-Berlin'], ['fri', '🌭', 'Lunsj', 'Currywurst og frilek'], ['reise', '✈️', '20:05', 'Flyavgang fra BER']] }
+    ].map(function (d) {
+      return { day: d.day, date: d.date, icon: d.icon, items: d.items.map(function (r) { var c = CAT[r[0]]; return { emoji: r[1], t: r[2], label: r[3], c: c.c, tint: c.tint, text: c.text }; }) };
+    });
+
+    var day = null;
+    if (cur.kind === 'day') {
+      var D = DAYS[cur.d];
+      var u = routeUrl(D.stops);
+      day = { icon: D.icon, label: D.label, when: D.when, title: D.title, lede: D.lede, bg: D.bg, allUrl: u || '#', hasAll: !!u,
+        list: D.stops.map(function (x, j) { var c = CAT[x.cat]; return { time: x.time, emoji: x.emoji, title: x.title, c: c.c, tint: '#FFFFFF', text: c.text, go: function () { self.go(dayIdx[cur.d] + 1 + j); } }; }) };
+    }
+
+    var s = null, map = null;
+    if (cur.kind === 'stop') {
+      var DD = DAYS[cur.d], stops = DD.stops, x = stops[cur.j], c = CAT[x.cat];
+      var sel = x.selfie ? SELFIES[x.selfie - 1] : null;
+      var origin = x.origin || (cur.j > 0 ? stops[cur.j - 1].q : HOTEL);
+      var legUrl = dirUrl(origin, x.q, x.mode);
+      var legLabel = x.mode === 'transit' ? '🚇 Kollektivrute hit' : '🚶 Gangrute hit';
+      s = {
+        title: x.title, de: x.de, emoji: x.emoji, c: c.c, tint: c.tint, text: c.text, catLabel: c.label,
+        eyebrow: DD.label.toUpperCase() + ' · ' + x.time + ' · ' + x.dur.toUpperCase(),
+        text: x.text, tip: x.tip, hasPhotoTip: !!x.photoTip, photoTip: x.photoTip || '',
+        hasExtra: !!x.extra, extraEmoji: x.extraEmoji || '', extraLabel: x.extraLabel || '', extra: x.extra || '',
+        hasPhoto: !!x.photo, noPhoto: !x.photo, photo: x.photo || '', credit: x.credit || '',
+        hasSelfie: !!sel, selfieN: sel ? sel.n : '', selfieLine: sel ? sel.caption : '',
+        noMap: !x.lat, how: x.how, legUrl: legUrl, legLabel: legLabel
+      };
+      if (x.lat) {
+        var mapped = stops.filter(function (q) { return q.lat; });
+        var mi = mapped.indexOf(x);
+        var pr = project(stops, !!x.far);
+        var P = mapped.map(function (q) { return pr.pos(q); });
+        var pts = mapped.map(function (q, j) {
+          var cc = CAT[q.cat], done = j < mi;
+          return { x: P[j].x, y: P[j].y, n: j + 1, fill: done ? cc.c : '#FFFFFF', stroke: cc.c, tc: done ? '#FFFFFF' : cc.text };
+        });
+        var grid = [];
+        for (var gx = 40; gx < 440; gx += 40) grid.push({ x1: gx, y1: 0, x2: gx, y2: 230 });
+        for (var gy = 30; gy < 230; gy += 40) grid.push({ x1: 0, y1: gy, x2: 440, y2: gy });
+        var nxt = mapped[mi + 1];
+        var right = P[mi].x < 270;
+        map = {
+          head: DD.icon + ' ' + DD.label.toUpperCase() + ' · ' + (mi + 1) + '/' + mapped.length + (nxt ? ' · NESTE: ' + nxt.short.toUpperCase() : ' · SISTE STOPP'),
+          aria: 'Kart over ' + DD.label.toLowerCase() + ' med ' + mapped.length + ' stopp. Nå: ' + x.title + '.',
+          grid: grid, pts: pts,
+          all: P.map(function (p) { return p.x + ',' + p.y; }).join(' '),
+          done: P.slice(0, mi + 1).map(function (p) { return p.x + ',' + p.y; }).join(' '),
+          mx: P[mi].x, my: P[mi].y, curN: mi + 1, curName: x.short || x.title,
+          lx: right ? 18 : -18, anchor: right ? 'start' : 'end',
+          barEnd: 16 + pr.barPx, barLabel: pr.barLabel,
+          how: x.how + ' Linjene viser rekkefølgen, ikke selve ruten.',
+          legUrl: legUrl, legLabel: legLabel
+        };
+      }
+    }
+
+    var taken = this.state.taken, takenCount = 0;
+    var selfies = SELFIES.map(function (c) {
+      var on = !!taken[c.n]; if (on) takenCount++;
+      var cc = CAT[c.cat];
+      return { n: c.n, emoji: c.emoji, place: c.place, caption: c.caption, when: c.when, pressed: on ? 'true' : 'false', text: cc.text,
+        bg: on ? cc.tint : '#FFFFFF', line: on ? cc.c : '#E3DCEC',
+        btnBg: on ? cc.c : '#FFFFFF', btnFg: on ? '#FFFFFF' : cc.text, btnLabel: on ? 'Tatt!' : 'Merk som tatt',
+        toggle: function () { var t = Object.assign({}, self.state.taken); t[c.n] = !t[c.n]; self.setState({ taken: t }); } };
+    });
+
+    var caught = this.state.caught, dexCount = 0, dexTotal = DEX.length + SIDE.length;
+    var flip = function (id) { var t = Object.assign({}, self.state.caught); t[id] = !t[id]; self.setState({ caught: t }); };
+    var gray = 'grayscale(1) contrast(.85) brightness(1.08)';
+    var dexCards = DEX.map(function (d) {
+      var on = !!caught[d.id]; if (on) dexCount++;
+      return { no: d.no, name: d.name, img: d.img, type: d.type, rarity: d.rarity, habitat: d.habitat, ability: d.ability, abilityText: d.abilityText, quote: d.quote,
+        filter: on ? 'none' : gray, line: on ? '#D9A93A' : '#EADFC8', shadow: on ? '0 12px 26px -16px rgba(122,90,14,.7)' : 'none',
+        pressed: on ? 'true' : 'false', btnLabel: on ? '✓ Fanget!' : 'Fang!', btnBg: on ? '#D9A93A' : '#FFFFFF', btnFg: on ? '#1F2A37' : '#7A5A0E',
+        toggle: function () { flip(d.id); } };
+    });
+    var sideCards = SIDE.map(function (d) {
+      var on = !!caught[d.id]; if (on) dexCount++;
+      return { name: d.name, text: d.text, img: d.img || '', hasImg: !!d.img, noImg: !d.img, emoji: d.emoji || '',
+        filter: on ? 'none' : gray, line: on ? '#4E9A86' : '#DCE7E2',
+        pressed: on ? 'true' : 'false', btnLabel: on ? '✓ Fanget!' : 'Fang!', btnBg: on ? '#4E9A86' : '#FFFFFF', btnFg: on ? '#FFFFFF' : '#2F6B5E',
+        toggle: function () { flip(d.id); } };
+    });
+
+    var endLinks = DAYS.map(function (d) { return { label: d.icon + ' ' + d.label + ' i Google Maps', url: routeUrl(d.stops) }; }).filter(function (l) { return l.url; });
+    var par = 'translate3d(' + (-this.state.px * 16).toFixed(1) + 'px,' + (-this.state.py * 10).toFixed(1) + 'px,0)';
+
+    return {
+      setRoot: function (el) { self.rootEl = el; },
+      onKey: function (e) {
+        var k = e.key;
+        if (k === 'ArrowRight' || k === 'PageDown' || k === ' ') { e.preventDefault(); self.go(self.state.i + 1); }
+        else if (k === 'ArrowLeft' || k === 'PageUp') { e.preventDefault(); self.go(self.state.i - 1); }
+        else if (k === 'Home') { e.preventDefault(); self.go(0); }
+        else if (k === 'End') { e.preventDefault(); self.go(999); }
+      },
+      onMove: function (e) {
+        var w = window.innerWidth || 1280, h = window.innerHeight || 720;
+        var px = e.clientX / w - 0.5, py = e.clientY / h - 0.5;
+        if (self.raf) return;
+        self.raf = requestAnimationFrame(function () { self.raf = null; self.setState({ px: px, py: py }); });
+      },
+      onTouchStart: function (e) { var t = e.touches && e.touches[0]; self.tx = t ? { x: t.clientX, y: t.clientY } : null; },
+      onTouchEnd: function (e) {
+        var t = e.changedTouches && e.changedTouches[0]; if (!t || !self.tx) return;
+        var dx = t.clientX - self.tx.x, dy = t.clientY - self.tx.y; self.tx = null;
+        if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5) self.go(self.state.i + (dx < 0 ? 1 : -1));
+      },
+      next: function () { self.go(self.state.i + 1); },
+      prev: function () { self.go(self.state.i - 1); },
+      goHome: function () { self.go(0); },
+      goSelfie: function () { self.go(iSel); },
+      chapters: chapters, legend: legend, overview: overview, program: program,
+      counter: String(i + 1).padStart(2, '0') + ' / ' + S.length,
+      footLabel: cur.label,
+      progress: ((i / (S.length - 1)) * 100).toFixed(2) + '%',
+      isTitle: cur.kind === 'title', isOverview: cur.kind === 'overview', isProgram: cur.kind === 'program', isDay: cur.kind === 'day',
+      isStopA: cur.kind === 'stop' && i % 2 === 0, isStopB: cur.kind === 'stop' && i % 2 === 1,
+      isSelfie: cur.kind === 'selfie', isEnd: cur.kind === 'end', showMap: !!map,
+      day: day || { icon: '', label: '', when: '', title: '', lede: '', bg: '#F7F3EE', allUrl: '#', hasAll: false, list: [] },
+      s: s || {}, map: map || { grid: [], pts: [] }, par: par,
+      selfies: selfies, takenCount: takenCount, endLinks: endLinks,
+      isDex: cur.kind === 'dex', isSide: cur.kind === 'side',
+      dexCards: dexCards, sideCards: sideCards, dexCount: dexCount, dexTotal: dexTotal,
+      rank: 'Rang: ' + rankFor(dexCount, dexTotal), dexBar: ((dexCount / dexTotal) * 100).toFixed(1) + '%'
+    };
+  }
+}
+</script>
+</body>
+</html>
